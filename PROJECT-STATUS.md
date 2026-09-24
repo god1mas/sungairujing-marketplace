@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 2 — Authentication & Authorization — **COMPLETED**
+Phase 3 — Storage & Upload Infrastructure — **COMPLETED**
 
 ## Sub-Phase Status
 
@@ -21,7 +21,10 @@ Phase 2 — Authentication & Authorization — **COMPLETED**
 - Sub-Phase 2C — Login & Session — **COMPLETED**
 - Sub-Phase 2D — Authorization — **COMPLETED**
 - Sub-Phase 2E — Account Settings & Phase Closure — **COMPLETED**
-- Phase 3 and later — **NOT STARTED**
+- Sub-Phase 3A — Supabase Storage Foundation — **COMPLETED**
+- Sub-Phase 3B — Image Processing — **COMPLETED**
+- Sub-Phase 3C — Private Evidence — **COMPLETED**
+- Phase 4 and later — **NOT STARTED**
 
 ## Completed
 
@@ -74,6 +77,18 @@ Phase 2 — Authentication & Authorization — **COMPLETED**
 - Password-change session invalidation through `users.updated_at` and Auth.js sign-out
 - Password-recovery core token helpers, delivery contract, and unavailable-state pages without fake delivery
 - Full Phase 2 security, public-route, secret, documentation, dependency, and regression audit
+- Server-only Supabase storage client and provider abstraction
+- Validated public/private bucket configuration and safe generated public-media object paths
+- Non-overwriting uploads, public URL restriction, and object cleanup foundation
+- Supabase storage setup documentation without production credentials
+- Server-only Sharp validation and optimization for product images, merchant logos, and banners
+- Decoded-format verification, purpose-specific raw-size limits, safe WebP output, and metadata removal
+- Public-media uploader helpers with server-generated paths and compensating batch cleanup
+- Private evidence validation for JPEG, PNG, WebP, and PDF with an 8 MB per-file limit
+- Tenant-scoped private evidence uploads with a maximum of three files per submission
+- Five-minute authorized signed URLs for owning merchants and Super Admin
+- Private bucket enforcement, server-generated evidence paths, and compensating batch cleanup
+- Generic object cleanup compensation for failed database persistence callbacks
 
 ## In Progress
 
@@ -87,6 +102,7 @@ Phase 2 — Authentication & Authorization — **COMPLETED**
 - The documented baseline count was corrected from 15 to 16 tables after confirming all 16 named entities are required.
 - Seed image records use development storage keys; their matching media assets will require the later storage integration phase.
 - WhatsApp password recovery remains disabled until Meta provider credentials and an approved template are available; no delivery is simulated.
+- Real Supabase projects, buckets, and credentials are not configured in this repository; external network integration was not tested in Sub-Phase 3A.
 
 ## Tests
 
@@ -131,15 +147,33 @@ Phase 2 — Authentication & Authorization — **COMPLETED**
 - `npm run test`: PASS at Sub-Phase 2E / Phase 2 closure (76 tests)
 - `npm run build`: PASS at Sub-Phase 2E / Phase 2 closure
 - `npm audit --audit-level=high`: PASS at Phase 2 closure (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 3A
+- `npm run typecheck`: PASS at Sub-Phase 3A
+- `npm run format:check`: PASS at Sub-Phase 3A
+- `npm run test`: PASS at Sub-Phase 3A (95 tests)
+- `npm run build`: PASS at Sub-Phase 3A
+- `npm audit --audit-level=high`: PASS at Sub-Phase 3A (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 3B
+- `npm run typecheck`: PASS at Sub-Phase 3B
+- `npm run format:check`: PASS at Sub-Phase 3B
+- `npm run test`: PASS at Sub-Phase 3B (109 tests)
+- `npm run build`: PASS at Sub-Phase 3B
+- `npm audit --audit-level=high`: PASS at Sub-Phase 3B (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 3C / Phase 3 closure
+- `npm run typecheck`: PASS at Sub-Phase 3C / Phase 3 closure
+- `npm run format:check`: PASS at Sub-Phase 3C / Phase 3 closure
+- `npm run test`: PASS at Sub-Phase 3C / Phase 3 closure (130 tests)
+- `npm run build`: PASS at Sub-Phase 3C / Phase 3 closure
+- `npm audit --audit-level=high`: PASS at Phase 3 closure (0 vulnerabilities)
 
 ## Build Status
 
-PASS — Phase 2 authentication, account security, authorization, and tenant isolation verified
+PASS — Phase 3 storage, image-processing, and private-evidence infrastructure verified
 
 ## Last Commit
 
-No Phase 2 implementation commit has been created.
+`d4a2002 feat: implement authentication and tenant authorization`
 
 ## Next Action
 
-Await explicit approval to commit and push Phase 2. Do not begin Phase 3 automatically.
+Await approval for the Phase 3 Git checkpoint. Do not begin Phase 4 automatically.
