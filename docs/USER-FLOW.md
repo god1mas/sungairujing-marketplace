@@ -629,14 +629,15 @@ flowchart TD
     C --> D[Enter WhatsApp Number]
     D --> E[Enter Password]
     E --> F[Enter Merchant Address]
-    F --> G[Upload Business Evidence]
-    G --> H[Accept Terms]
+    F --> H[Accept Terms]
     H --> I[Submit Registration]
     I --> J{WhatsApp unique?}
     J -->|No| K[Show Error]
     J -->|Yes| L[Create Account + Merchant]
     L --> M[Verification Status: BELUM_DIVERIFIKASI]
-    M --> N[Login / Merchant Dashboard]
+    M --> N[Redirect to Login]
+    N --> O[Authenticate Normally]
+    O --> P[Merchant Dashboard]
 ```
 
 ## Registration Rules
@@ -646,7 +647,9 @@ flowchart TD
 - nomor WhatsApp harus unik;
 - password minimal 8 karakter;
 - syarat dan ketentuan wajib disetujui;
-- merchant langsung aktif setelah registrasi.
+- merchant langsung aktif setelah registrasi;
+- registrasi tidak membuat session atau melakukan auto-login;
+- bukti usaha dikumpulkan kemudian melalui alur verifikasi merchant.
 
 ---
 

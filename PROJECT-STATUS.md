@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 1 — Database Schema & Seed — **COMPLETED**
+Phase 2 — Authentication & Authorization — **COMPLETED**
 
 ## Sub-Phase Status
 
@@ -16,7 +16,11 @@ Phase 1 — Database Schema & Seed — **COMPLETED**
 - Sub-Phase 1.3 — Supporting Database Schema & Constraints — **COMPLETED**
 - Sub-Phase 1.4 — Migration & Seed — **COMPLETED**
 - Sub-Phase 1.5 — Final Database Audit & Phase Closure — **COMPLETED**
-- Phase 2 — **NOT STARTED**
+- Sub-Phase 2A — Auth Infrastructure — **COMPLETED**
+- Sub-Phase 2B — Registration — **COMPLETED**
+- Sub-Phase 2C — Login & Session — **COMPLETED**
+- Sub-Phase 2D — Authorization — **COMPLETED**
+- Sub-Phase 2E — Account Settings & Phase Closure — **COMPLETED**
 - Phase 3 and later — **NOT STARTED**
 
 ## Completed
@@ -49,6 +53,27 @@ Phase 1 — Database Schema & Seed — **COMPLETED**
 - Idempotent development seed for Super Admin, categories, merchants, products, images, banner, and featured merchants
 - Disposable PostgreSQL migration, constraint behavior, and seed verification
 - Clean PostgreSQL reproducibility, seed idempotency, secret, dependency, and full Phase 1 closure audit
+- Auth.js Credentials and JWT session foundation
+- Deterministic Indonesian WhatsApp normalization and Argon2id password utilities
+- Centralized authentication repository/service and typed safe session identity
+- Development-only in-memory rate-limit primitive with production fail-closed behavior
+- Merchant self-registration with shared Zod validation and canonical WhatsApp identity
+- Atomic User, active unverified Merchant, and OWNER membership creation
+- Accessible merchant registration page with safe errors and redirect-to-login behavior
+- Registration requirement reconciliation that defers private evidence to the later verification/storage flow
+- Merchant and Super Admin login through Auth.js Credentials with generic errors
+- Eight-hour minimal JWT session lifecycle, typed server session helper, and Auth.js logout component
+- Production Upstash login rate limiting with hashed identifier/IP keys and fail-safe configuration
+- Accessible role-aware login UI with registration-success feedback
+- Server-only authentication, global-role, membership, OWNER, and tenant-ownership authorization helpers
+- Database-backed account-version and active-membership checks with revocation-safe behavior
+- Protected `/dashboard` and `/admin` route foundations with minimal non-indexed placeholders
+- Tenant-scoped resource query pattern and explicit cross-tenant negative coverage
+- Authenticated merchant and Super Admin account-security routes
+- Current-password verification and Argon2id password replacement scoped to the authenticated user
+- Password-change session invalidation through `users.updated_at` and Auth.js sign-out
+- Password-recovery core token helpers, delivery contract, and unavailable-state pages without fake delivery
+- Full Phase 2 security, public-route, secret, documentation, dependency, and regression audit
 
 ## In Progress
 
@@ -61,6 +86,7 @@ Phase 1 — Database Schema & Seed — **COMPLETED**
 - On this Windows environment, Playwright's managed Next.js web server did not exit cleanly after a passing test; the E2E test exits successfully when run against an already-running production server.
 - The documented baseline count was corrected from 15 to 16 tables after confirming all 16 named entities are required.
 - Seed image records use development storage keys; their matching media assets will require the later storage integration phase.
+- WhatsApp password recovery remains disabled until Meta provider credentials and an approved template are available; no delivery is simulated.
 
 ## Tests
 
@@ -76,15 +102,44 @@ Phase 1 — Database Schema & Seed — **COMPLETED**
 - `npm run test:e2e`: PASS (1 Chromium smoke test)
 - `npm run build`: PASS at Phase 1 closure
 - `npm audit --audit-level=high`: PASS (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 2A
+- `npm run typecheck`: PASS at Sub-Phase 2A
+- `npm run format:check`: PASS at Sub-Phase 2A
+- `npm run test`: PASS at Sub-Phase 2A (16 tests)
+- `npm run build`: PASS at Sub-Phase 2A
+- `npm audit --audit-level=high`: PASS at Sub-Phase 2A (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 2B
+- `npm run typecheck`: PASS at Sub-Phase 2B
+- `npm run format:check`: PASS at Sub-Phase 2B
+- `npm run test`: PASS at Sub-Phase 2B (29 tests)
+- `npm run build`: PASS at Sub-Phase 2B
+- `npm audit --audit-level=high`: PASS at Sub-Phase 2B (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 2C
+- `npm run typecheck`: PASS at Sub-Phase 2C
+- `npm run format:check`: PASS at Sub-Phase 2C
+- `npm run test`: PASS at Sub-Phase 2C (47 tests)
+- `npm run build`: PASS at Sub-Phase 2C
+- `npm audit --audit-level=high`: PASS at Sub-Phase 2C (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 2D
+- `npm run typecheck`: PASS at Sub-Phase 2D
+- `npm run format:check`: PASS at Sub-Phase 2D
+- `npm run test`: PASS at Sub-Phase 2D (61 tests)
+- `npm run build`: PASS at Sub-Phase 2D
+- `npm run lint`: PASS at Sub-Phase 2E / Phase 2 closure
+- `npm run typecheck`: PASS at Sub-Phase 2E / Phase 2 closure
+- `npm run format:check`: PASS at Sub-Phase 2E / Phase 2 closure
+- `npm run test`: PASS at Sub-Phase 2E / Phase 2 closure (76 tests)
+- `npm run build`: PASS at Sub-Phase 2E / Phase 2 closure
+- `npm audit --audit-level=high`: PASS at Phase 2 closure (0 vulnerabilities)
 
 ## Build Status
 
-PASS — Phase 1 closure verified
+PASS — Phase 2 authentication, account security, authorization, and tenant isolation verified
 
 ## Last Commit
 
-No Phase 1 implementation commit has been created.
+No Phase 2 implementation commit has been created.
 
 ## Next Action
 
-Await explicit approval to commit and push Phase 1 before starting Phase 2. Do not begin Phase 2 automatically.
+Await explicit approval to commit and push Phase 2. Do not begin Phase 3 automatically.

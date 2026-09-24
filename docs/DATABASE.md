@@ -2013,10 +2013,13 @@ Contoh:
 create user
 create merchant
 create membership OWNER
-create initial verification submission/evidence
 ```
 
 Semua harus berhasil atau rollback.
+
+`VerificationSubmission` dan `VerificationEvidence` dibuat kemudian dalam
+alur verifikasi merchant setelah private storage tersedia, bukan pada initial
+account registration.
 
 ### Verification Decision
 

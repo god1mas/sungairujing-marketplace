@@ -432,9 +432,11 @@ Membuat login merchant/Super Admin yang aman dan tenant isolation foundation.
    - user;
    - merchant;
    - membership OWNER;
-   - initial verification submission/evidence flow as appropriate.
+   - no verification submission/evidence during initial registration.
 9. Implement login page.
 10. Implement merchant registration page.
+    - after success, redirect to login without creating a session;
+    - collect business evidence later in the verification/storage phase.
 11. Implement logout.
 12. Add `requireUser`.
 13. Add `requireMerchantAdmin`.

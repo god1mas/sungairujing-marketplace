@@ -289,11 +289,13 @@ Merchant Name
 WhatsApp Number
 Password
 Merchant Address
-Business Evidence
 Terms Acceptance
 ```
 
 Email tidak diwajibkan.
+
+Business Evidence dikumpulkan kemudian melalui alur verifikasi merchant dan
+bukan syarat initial account registration.
 
 ---
 

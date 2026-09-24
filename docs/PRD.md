@@ -190,6 +190,8 @@ Register
    ↓
 Merchant Account Created
    ↓
+Login
+   ↓
 Dashboard
    ↓
 Complete Merchant Profile
@@ -260,8 +262,10 @@ Data registrasi merchant:
 - nomor WhatsApp;
 - password;
 - alamat merchant;
-- bukti usaha;
 - checkbox persetujuan syarat dan ketentuan.
+
+Bukti usaha dikumpulkan setelah akun dibuat melalui alur verifikasi merchant,
+bukan sebagai syarat registrasi awal.
 
 Email tidak diwajibkan.
 

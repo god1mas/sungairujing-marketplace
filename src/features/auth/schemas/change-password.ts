@@ -1,0 +1,8 @@
+import { z } from "zod";
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Password lama wajib diisi."),
+  newPassword: z.string().min(8, "Password baru minimal 8 karakter."),
+});
+
+export type ChangePasswordInput = z.input<typeof changePasswordSchema>;
