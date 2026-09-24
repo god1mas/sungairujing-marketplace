@@ -266,4 +266,23 @@ describe("private evidence service", () => {
     ).resolves.toBe("https://signed.example/evidence");
     expect(deps.findMembership).not.toHaveBeenCalled();
   });
+
+  it("propagates signed-URL provider failure without falling back to a public URL", async () => {
+    const objectStorage = storage();
+    vi.mocked(objectStorage.createSignedUrl).mockRejectedValue(
+      new Error("provider unavailable"),
+    );
+    await expect(
+      createAuthorizedEvidenceSignedUrl("evidence-a", {
+        authorization: authorization({ role: GlobalUserRole.SUPER_ADMIN }),
+        storage: objectStorage,
+        findEvidence: vi.fn().mockResolvedValue({
+          id: "evidence-a",
+          merchantId: "merchant-a",
+          storageKey: "verification/merchant-a/submission-a/evidence.jpg",
+        }),
+      }),
+    ).rejects.toThrow("provider unavailable");
+    expect(objectStorage.getPublicUrl).not.toHaveBeenCalled();
+  });
 });

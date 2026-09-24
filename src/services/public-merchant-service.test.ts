@@ -28,6 +28,19 @@ describe("public merchant service", () => {
     );
   });
 
+  it.each(["BELUM_DIVERIFIKASI", "DITOLAK"] as const)(
+    "does not grant the public badge to %s merchants",
+    async (verificationStatus) => {
+      const [merchant] = await getPublicMerchants({
+        findMerchants: vi
+          .fn()
+          .mockResolvedValue([{ ...summary, verificationStatus }]),
+        resolveImageUrl: () => null,
+      });
+      expect(merchant.isVerified).toBe(false);
+    },
+  );
+
   it("rejects malformed slugs before database access", async () => {
     const findMerchant = vi.fn();
     await expect(

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { LogoutButton } from "@/features/auth/components/logout-button";
 
 export default function AdminPage() {
@@ -11,10 +12,16 @@ export default function AdminPage() {
           Super Admin
         </h1>
         <p className="mt-3 text-neutral-600">
-          Route ini hanya dapat diakses oleh Super Admin. Fitur administrasi
-          akan dibangun pada fase berikutnya.
+          Kelola pengajuan verifikasi merchant tanpa memengaruhi hak merchant
+          untuk berjualan.
         </p>
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href="/admin/verifications"
+            className="min-h-11 rounded-md bg-brand-700 px-4 py-2 font-semibold text-white"
+          >
+            Verifikasi merchant
+          </Link>
           <LogoutButton />
         </div>
       </section>

@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 6 — Merchant Dashboard — **COMPLETED**
+Phase 7 — Merchant Verification — **COMPLETED**
 
 ## Sub-Phase Status
 
@@ -34,7 +34,8 @@ Phase 6 — Merchant Dashboard — **COMPLETED**
 - Sub-Phase 6C — Product Upload — **COMPLETED**
 - Sub-Phase 6D — Merchant Profile — **COMPLETED**
 - Sub-Phase 6E — Suspension Rules — **COMPLETED**
-- Phase 7 and later — **NOT STARTED**
+- Phase 7 — Merchant Verification — **COMPLETED**
+- Phase 8 and later — **NOT STARTED**
 
 ## Completed
 
@@ -139,12 +140,22 @@ Phase 6 — Merchant Dashboard — **COMPLETED**
 - Dashboard integration of the existing Phase 2 account/change-password destination
 - Shared merchant suspension banner with merchant-visible reason and no internal moderation metadata
 - Coherent suspended-merchant read-only dashboard state across products, images, and profile management
+- Post-registration merchant verification workflow with private evidence upload and submission history
+- Super Admin verification queue, private signed-evidence review, and approve/reject decisions
+- Atomic verification-state and internal-notification updates with rejected-submission resubmission
+- Authoritative public verified badge behavior while verification remains non-blocking
+- `npm run lint`: PASS at Phase 7 closure
+- `npm run typecheck`: PASS at Phase 7 closure
+- `npm run format:check`: PASS at Phase 7 closure
+- `npm run test -- --maxWorkers=2`: PASS at Phase 7 closure (258 tests)
+- Phase 7 Playwright authorization smoke coverage: PASS (2 Chromium tests); authenticated PostgreSQL/Supabase-backed lifecycle coverage is LIMITED because local external infrastructure is unavailable
+- `npm run build`: PASS at Phase 7 closure
 - Centralized active-merchant mutation enforcement retained for all public-content mutations
 - Public merchant/product and stale-cart suspension safeguards verified through authoritative server filters
 
 ## In Progress
 
-- No phase is currently in progress. Phase 6 is complete; Phase 7 has not started.
+- No phase is currently in progress. Phase 7 is complete; Phase 8 has not started.
 
 ## Known Issues
 
@@ -288,12 +299,12 @@ Phase 6 — Merchant Dashboard — **COMPLETED**
 
 ## Build Status
 
-PASS — Phase 6 merchant dashboard verified and completed
+PASS — Phase 7 merchant verification verified and completed
 
 ## Last Commit
 
-`2ca76ea feat: build public marketplace experience`
+`3406c2e feat: implement merchant dashboard and management`
 
 ## Next Action
 
-Await approval for the Phase 6 Git checkpoint. Do not begin Phase 7 — Merchant Verification automatically.
+Await approval for the Phase 7 Git checkpoint. Do not begin Phase 8 — Analytics & Popular Products automatically.
