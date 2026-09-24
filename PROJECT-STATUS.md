@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 3 — Storage & Upload Infrastructure — **COMPLETED**
+Phase 4 — Public Marketplace Foundation — **COMPLETED**
 
 ## Sub-Phase Status
 
@@ -24,7 +24,11 @@ Phase 3 — Storage & Upload Infrastructure — **COMPLETED**
 - Sub-Phase 3A — Supabase Storage Foundation — **COMPLETED**
 - Sub-Phase 3B — Image Processing — **COMPLETED**
 - Sub-Phase 3C — Private Evidence — **COMPLETED**
-- Phase 4 and later — **NOT STARTED**
+- Sub-Phase 4A — Public Shell — **COMPLETED**
+- Sub-Phase 4B — Catalog — **COMPLETED**
+- Sub-Phase 4C — Product Detail — **COMPLETED**
+- Sub-Phase 4D — Merchant Pages — **COMPLETED**
+- Phase 5 and later — **NOT STARTED**
 
 ## Completed
 
@@ -89,10 +93,26 @@ Phase 3 — Storage & Upload Infrastructure — **COMPLETED**
 - Five-minute authorized signed URLs for owning merchants and Super Admin
 - Private bucket enforcement, server-generated evidence paths, and compensating batch cleanup
 - Generic object cleanup compensation for failed database persistence callbacks
+- Anonymous-first shared public layout separated from auth, merchant, and admin areas
+- Responsive public header, mobile navigation, footer, skip link, and account-aware entry point
+- Homepage hero, semantic search entry point, factual about section, and public SEO metadata
+- Server-rendered public product catalog with shareable search, filter, sort, and pagination parameters
+- Centralized public eligibility enforcement for active products belonging to active merchants
+- Responsive ProductCard with public-media URL resolution, safe image fallback, and explicit availability state
+- Active category homepage links and database-backed category and merchant filter options
+- Safe catalog empty, loading, and unavailable states without fabricated product data
+- Public product detail route with catalog-equivalent eligibility enforcement and safe not-found behavior
+- Responsive product gallery using ordered public ProductImage records and factual image fallback
+- Product detail information for name, price, unit, description, category, availability, merchant, and merchant address
+- Eligible-product metadata with canonical and Open Graph data that does not expose hidden products
+- Public all-merchants listing and `/merchant/{slug}` profile routes restricted to active merchants
+- Merchant profile presentation for logo, verification, description, address, operational status, opening hours, and general WhatsApp contact
+- Merchant product listings that reuse centralized public-product eligibility and existing ProductCard behavior
+- Safe merchant logo, product-empty, unavailable, not-found, and protected metadata states
 
 ## In Progress
 
-- No phase is currently in progress.
+- No phase is currently in progress. Phase 5 has not started.
 
 ## Known Issues
 
@@ -165,15 +185,41 @@ Phase 3 — Storage & Upload Infrastructure — **COMPLETED**
 - `npm run test`: PASS at Sub-Phase 3C / Phase 3 closure (130 tests)
 - `npm run build`: PASS at Sub-Phase 3C / Phase 3 closure
 - `npm audit --audit-level=high`: PASS at Phase 3 closure (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 4A
+- `npm run typecheck`: PASS at Sub-Phase 4A
+- `npm run format:check`: PASS at Sub-Phase 4A
+- `npm run test`: PASS at Sub-Phase 4A (137 tests)
+- `npm run build`: PASS at Sub-Phase 4A
+- `npm run lint`: PASS at Sub-Phase 4B
+- `npm run typecheck`: PASS at Sub-Phase 4B
+- `npm run format:check`: PASS at Sub-Phase 4B
+- `npm run test`: PASS at Sub-Phase 4B (146 tests)
+- `npm run test:e2e`: PASS at Sub-Phase 4B (3 Chromium smoke tests)
+- `npm run build`: PASS at Sub-Phase 4B
+- `npm audit --audit-level=high`: PASS at Sub-Phase 4B (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 4C
+- `npm run typecheck`: PASS at Sub-Phase 4C
+- `npm run format:check`: PASS at Sub-Phase 4C
+- `npm run test`: PASS at Sub-Phase 4C (156 tests)
+- `npm run test:e2e`: PASS for available Sub-Phase 4C smoke coverage (4 Chromium tests); eligible seeded-product navigation was not run because disposable PostgreSQL was unavailable
+- `npm run build`: PASS at Sub-Phase 4C
+- `npm audit --audit-level=high`: PASS at Sub-Phase 4C (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 4D / Phase 4 closure
+- `npm run typecheck`: PASS at Sub-Phase 4D / Phase 4 closure
+- `npm run format:check`: PASS at Sub-Phase 4D / Phase 4 closure
+- `npm run test`: PASS at Sub-Phase 4D / Phase 4 closure (168 tests)
+- `npm run test:e2e`: PASS for available Phase 4 smoke coverage (6 Chromium tests); database-backed merchant navigation was not run because disposable PostgreSQL was unavailable
+- `npm run build`: PASS at Sub-Phase 4D / Phase 4 closure
+- `npm audit --audit-level=high`: PASS at Phase 4 closure (0 vulnerabilities)
 
 ## Build Status
 
-PASS — Phase 3 storage, image-processing, and private-evidence infrastructure verified
+PASS — Phase 4 public marketplace foundation verified and completed
 
 ## Last Commit
 
-`d4a2002 feat: implement authentication and tenant authorization`
+`ed71cd2 feat: establish storage and upload infrastructure`
 
 ## Next Action
 
-Await approval for the Phase 3 Git checkpoint. Do not begin Phase 4 automatically.
+Await approval for the Phase 4 Git checkpoint. Do not begin Phase 5 automatically.
