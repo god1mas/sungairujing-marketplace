@@ -15,7 +15,7 @@ export type PublicProductDetail = {
   unit: string;
   availability: "TERSEDIA" | "HABIS";
   category: { name: string; slug: string };
-  merchant: { name: string; slug: string; address: string };
+  merchant: { id: string; name: string; slug: string; address: string };
   images: { url: string; alt: string; isCover: boolean }[];
 };
 

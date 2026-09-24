@@ -16,6 +16,7 @@ describe("ProductDetailView", () => {
           availability: "HABIS",
           category: { name: "Makanan", slug: "makanan" },
           merchant: {
+            id: "merchant-id",
             name: "Dapur Bawean",
             slug: "dapur-bawean",
             address: "Desa Sungairujing",
@@ -41,9 +42,10 @@ describe("ProductDetailView", () => {
       "/products?category=makanan",
     );
     expect(screen.getByText("Foto Kerupuk Ikan belum tersedia")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Produk Habis" })).toBeDisabled();
   });
 
-  it("does not introduce cart, WhatsApp, rating, review, or sales behavior", () => {
+  it("allows an available product to be added without introducing unsupported behavior", () => {
     render(
       <ProductDetailView
         product={{
@@ -56,6 +58,7 @@ describe("ProductDetailView", () => {
           availability: "TERSEDIA",
           category: { name: "Minuman", slug: "minuman" },
           merchant: {
+            id: "merchant-id",
             name: "Warung Kopi",
             slug: "warung-kopi",
             address: "Sungairujing",
@@ -65,7 +68,9 @@ describe("ProductDetailView", () => {
       />,
     );
 
-    expect(screen.queryByText(/tambah ke keranjang/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Tambah ke Cart" }),
+    ).toBeEnabled();
     expect(screen.queryByText(/whatsapp/i)).not.toBeInTheDocument();
     expect(
       screen.queryByText(/rating|review|terjual/i),

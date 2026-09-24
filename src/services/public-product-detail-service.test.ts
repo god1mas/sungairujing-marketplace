@@ -15,6 +15,7 @@ const record = {
   availabilityStatus: "HABIS" as const,
   category: { name: "Makanan", slug: "makanan" },
   merchant: {
+    id: "merchant-id",
     name: "Dapur Bawean",
     slug: "dapur-bawean",
     address: "Desa Sungairujing",

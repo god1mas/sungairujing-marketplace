@@ -2,6 +2,7 @@ import Link from "next/link";
 import { formatRupiah } from "@/lib/format/currency";
 import type { PublicProductDetail } from "@/services/public-product-detail-service";
 import { ProductGallery } from "./product-gallery";
+import { AddToCart } from "@/components/cart/add-to-cart";
 
 export function ProductDetailView({
   product,
@@ -61,6 +62,12 @@ export function ProductDetailView({
                 </p>
               ) : null}
             </div>
+
+            <AddToCart
+              productId={product.id}
+              merchantId={product.merchant.id}
+              disabled={!isAvailable}
+            />
 
             <section
               aria-labelledby="merchant-title"

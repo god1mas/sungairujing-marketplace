@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 4 — Public Marketplace Foundation — **COMPLETED**
+Phase 5 — Cart & WhatsApp Checkout — **COMPLETED**
 
 ## Sub-Phase Status
 
@@ -28,7 +28,8 @@ Phase 4 — Public Marketplace Foundation — **COMPLETED**
 - Sub-Phase 4B — Catalog — **COMPLETED**
 - Sub-Phase 4C — Product Detail — **COMPLETED**
 - Sub-Phase 4D — Merchant Pages — **COMPLETED**
-- Phase 5 and later — **NOT STARTED**
+- Phase 5 — Cart & WhatsApp Checkout — **COMPLETED**
+- Phase 6 and later — **NOT STARTED**
 
 ## Completed
 
@@ -109,10 +110,16 @@ Phase 4 — Public Marketplace Foundation — **COMPLETED**
 - Merchant profile presentation for logo, verification, description, address, operational status, opening hours, and general WhatsApp contact
 - Merchant product listings that reuse centralized public-product eligibility and existing ProductCard behavior
 - Safe merchant logo, product-empty, unavailable, not-found, and protected metadata states
+- Versioned Zustand cart persistence containing only product, merchant, and quantity identifiers
+- Accountless multi-merchant cart grouped for independent per-merchant checkout
+- Server-authoritative cart revalidation for product visibility, merchant ownership, availability, price, and contact data
+- Buyer checkout form with conditional delivery address and no persisted buyer or order data
+- Centralized WhatsApp checkout message and `wa.me` URL generation with cryptographically random communication references
+- Explicit estimated-product-total language without shipping calculation, payment, transaction, or sales claims
 
 ## In Progress
 
-- No phase is currently in progress. Phase 5 has not started.
+- No phase is currently in progress. Phase 5 is complete; Phase 6 has not started.
 
 ## Known Issues
 
@@ -211,15 +218,22 @@ Phase 4 — Public Marketplace Foundation — **COMPLETED**
 - `npm run test:e2e`: PASS for available Phase 4 smoke coverage (6 Chromium tests); database-backed merchant navigation was not run because disposable PostgreSQL was unavailable
 - `npm run build`: PASS at Sub-Phase 4D / Phase 4 closure
 - `npm audit --audit-level=high`: PASS at Phase 4 closure (0 vulnerabilities)
+- `npm run lint`: PASS at Phase 5 closure
+- `npm run typecheck`: PASS at Phase 5 closure
+- `npm run format:check`: PASS at Phase 5 closure
+- `npm run test`: PASS at Phase 5 closure (184 tests)
+- Phase 5 Playwright smoke coverage: PASS (2 Chromium tests); database-backed checkout navigation was not run because disposable PostgreSQL was unavailable
+- `npm run build`: PASS at Phase 5 closure
+- `npm audit --audit-level=high`: PASS at Phase 5 closure (0 vulnerabilities)
 
 ## Build Status
 
-PASS — Phase 4 public marketplace foundation verified and completed
+PASS — Phase 5 cart and WhatsApp checkout verified and completed
 
 ## Last Commit
 
-`ed71cd2 feat: establish storage and upload infrastructure`
+`2ca76ea feat: build public marketplace experience`
 
 ## Next Action
 
-Await approval for the Phase 4 Git checkpoint. Do not begin Phase 5 automatically.
+Await approval for the Phase 5 Git checkpoint. Do not begin Phase 6 automatically.
