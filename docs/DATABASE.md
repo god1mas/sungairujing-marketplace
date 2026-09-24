@@ -399,6 +399,7 @@ users
 | Column | Type | Constraint | Description |
 |---|---|---|---|
 | id | UUID | PK | User identifier |
+| name | VARCHAR | NOT NULL | Nama lengkap pengguna/pemilik akun merchant |
 | whatsapp_number | VARCHAR | NOT NULL, UNIQUE | Login identifier |
 | password_hash | TEXT | NOT NULL | Secure password hash |
 | global_role | ENUM | NOT NULL | USER / SUPER_ADMIN |
@@ -2268,7 +2269,7 @@ password_reset_tokens
 Total baseline:
 
 ```text
-15 tables
+16 tables
 ```
 
 Tidak ada transaction/order domain pada MVP.

@@ -1,0 +1,444 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum GlobalUserRole {
+  USER
+  SUPER_ADMIN
+
+  @@map("global_user_role")
+}
+
+enum MerchantMembershipRole {
+  OWNER
+  ADMIN
+
+  @@map("merchant_membership_role")
+}
+
+enum MerchantStatus {
+  ACTIVE
+  SUSPENDED
+
+  @@map("merchant_status")
+}
+
+enum MerchantOperationalStatus {
+  BUKA
+  TUTUP
+  LIBUR_SEMENTARA
+
+  @@map("merchant_operational_status")
+}
+
+enum MerchantVerificationStatus {
+  BELUM_DIVERIFIKASI
+  TERVERIFIKASI
+  DITOLAK
+
+  @@map("merchant_verification_status")
+}
+
+enum ProductAvailability {
+  TERSEDIA
+  HABIS
+
+  @@map("product_availability")
+}
+
+enum ProductModerationStatus {
+  ACTIVE
+  SUSPENDED
+
+  @@map("product_moderation_status")
+}
+
+enum VerificationSubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+
+  @@map("verification_submission_status")
+}
+
+enum WhatsAppClickSource {
+  PRODUCT_DETAIL
+  MERCHANT_PROFILE
+  CHECKOUT
+
+  @@map("whatsapp_click_source")
+}
+
+enum ReportTargetType {
+  PRODUCT
+  MERCHANT
+
+  @@map("report_target_type")
+}
+
+enum ReportReason {
+  ILLEGAL_OR_PROHIBITED
+  DANGEROUS_PRODUCT
+  FRAUD_OR_MISLEADING
+  PHOTO_DESCRIPTION_MISMATCH
+  SPAM
+  OTHER
+
+  @@map("report_reason")
+}
+
+enum ReportStatus {
+  BARU
+  DITINJAU
+  SELESAI
+  DITOLAK
+
+  @@map("report_status")
+}
+
+enum NotificationType {
+  VERIFICATION_APPROVED
+  VERIFICATION_REJECTED
+  PRODUCT_SUSPENDED
+  MERCHANT_SUSPENDED
+  MERCHANT_REACTIVATED
+
+  @@map("notification_type")
+}
+
+enum ModerationActionType {
+  PRODUCT_SUSPENDED
+  PRODUCT_UNSUSPENDED
+  MERCHANT_SUSPENDED
+  MERCHANT_REACTIVATED
+  PRODUCT_DELETED
+  MERCHANT_DELETED
+
+  @@map("moderation_action_type")
+}
+
+model User {
+  id              String         @id @default(uuid()) @db.Uuid
+  name            String         @db.VarChar
+  whatsappNumber  String         @unique @map("whatsapp_number") @db.VarChar
+  passwordHash    String         @map("password_hash") @db.Text
+  globalRole      GlobalUserRole @map("global_role")
+  termsAcceptedAt DateTime?      @map("terms_accepted_at") @db.Timestamptz
+  termsVersion    String?        @map("terms_version") @db.VarChar
+  isActive        Boolean        @default(true) @map("is_active")
+  lastLoginAt     DateTime?      @map("last_login_at") @db.Timestamptz
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+
+  merchantMemberships             MerchantMembership[]
+  suspendedMerchants              Merchant[]               @relation("MerchantSuspendedBy")
+  suspendedProducts               Product[]                @relation("ProductSuspendedBy")
+  reviewedVerificationSubmissions VerificationSubmission[] @relation("VerificationReviewedBy")
+  reviewedReports                 Report[]                 @relation("ReportReviewedBy")
+  moderationActions               ModerationAction[]       @relation("ModerationActor")
+  notifications                   Notification[]
+  createdBanners                  Banner[]
+  createdFeaturedMerchants        FeaturedMerchant[]
+  passwordResetTokens             PasswordResetToken[]
+
+  @@map("users")
+}
+
+model Merchant {
+  id                   String                     @id @default(uuid()) @db.Uuid
+  name                 String                     @db.VarChar
+  slug                 String                     @unique @db.VarChar
+  description          String?                    @db.Text
+  logoStorageKey       String?                    @map("logo_storage_key") @db.Text
+  address              String                     @db.Text
+  publicWhatsappNumber String                     @map("public_whatsapp_number") @db.VarChar
+  openingHours         Json?                      @map("opening_hours") @db.JsonB
+  operationalStatus    MerchantOperationalStatus  @map("operational_status")
+  status               MerchantStatus             @default(ACTIVE)
+  verificationStatus   MerchantVerificationStatus @map("verification_status")
+  suspensionReason     String?                    @map("suspension_reason") @db.Text
+  suspendedAt          DateTime?                  @map("suspended_at") @db.Timestamptz
+  suspendedByUserId    String?                    @map("suspended_by_user_id") @db.Uuid
+  createdAt            DateTime                   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime                   @updatedAt @map("updated_at") @db.Timestamptz
+
+  suspendedByUser         User?                    @relation("MerchantSuspendedBy", fields: [suspendedByUserId], references: [id])
+  memberships             MerchantMembership[]
+  products                Product[]
+  verificationSubmissions VerificationSubmission[]
+  productViewEvents       ProductViewEvent[]
+  whatsappClickEvents     WhatsAppClickEvent[]
+  reports                 Report[]
+  moderationActions       ModerationAction[]
+  notifications           Notification[]
+  featuredMerchant        FeaturedMerchant?
+
+  @@map("merchants")
+}
+
+model MerchantMembership {
+  id         String                 @id @default(uuid()) @db.Uuid
+  merchantId String                 @map("merchant_id") @db.Uuid
+  userId     String                 @map("user_id") @db.Uuid
+  role       MerchantMembershipRole
+  isActive   Boolean                @default(true) @map("is_active")
+  createdAt  DateTime               @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime               @updatedAt @map("updated_at") @db.Timestamptz
+
+  merchant Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@unique([merchantId, userId])
+  @@index([userId, isActive])
+  @@index([merchantId, isActive])
+  @@map("merchant_memberships")
+}
+
+model Category {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @db.VarChar
+  slug        String   @unique @db.VarChar
+  description String?  @db.Text
+  isActive    Boolean  @default(true) @map("is_active")
+  sortOrder   Int?     @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id                 String                  @id @default(uuid()) @db.Uuid
+  merchantId         String                  @map("merchant_id") @db.Uuid
+  categoryId         String                  @map("category_id") @db.Uuid
+  name               String                  @db.VarChar
+  slug               String                  @unique @db.VarChar
+  description        String                  @db.Text
+  price              Decimal                 @db.Decimal(14, 2)
+  unit               String                  @db.VarChar
+  availabilityStatus ProductAvailability     @map("availability_status")
+  moderationStatus   ProductModerationStatus @default(ACTIVE) @map("moderation_status")
+  suspensionReason   String?                 @map("suspension_reason") @db.Text
+  suspendedAt        DateTime?               @map("suspended_at") @db.Timestamptz
+  suspendedByUserId  String?                 @map("suspended_by_user_id") @db.Uuid
+  createdAt          DateTime                @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime                @updatedAt @map("updated_at") @db.Timestamptz
+
+  merchant            Merchant             @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  category            Category             @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  suspendedByUser     User?                @relation("ProductSuspendedBy", fields: [suspendedByUserId], references: [id])
+  images              ProductImage[]
+  viewEvents          ProductViewEvent[]
+  whatsappClickEvents WhatsAppClickEvent[]
+  reports             Report[]
+  moderationActions   ModerationAction[]
+  notifications       Notification[]
+
+  @@index([merchantId, createdAt])
+  @@index([categoryId, createdAt])
+  @@index([moderationStatus, createdAt])
+  @@index([availabilityStatus, createdAt])
+  @@map("products")
+}
+
+model ProductImage {
+  id         String   @id @default(uuid()) @db.Uuid
+  productId  String   @map("product_id") @db.Uuid
+  storageKey String   @map("storage_key") @db.Text
+  altText    String?  @map("alt_text") @db.VarChar
+  sortOrder  Int      @default(0) @map("sort_order")
+  isCover    Boolean  @default(false) @map("is_cover")
+  mimeType   String   @map("mime_type") @db.VarChar
+  sizeBytes  BigInt   @map("size_bytes")
+  width      Int?
+  height     Int?
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_images")
+}
+
+model VerificationSubmission {
+  id               String                       @id @default(uuid()) @db.Uuid
+  merchantId       String                       @map("merchant_id") @db.Uuid
+  status           VerificationSubmissionStatus
+  submittedAt      DateTime                     @default(now()) @map("submitted_at") @db.Timestamptz
+  reviewedAt       DateTime?                    @map("reviewed_at") @db.Timestamptz
+  reviewedByUserId String?                      @map("reviewed_by_user_id") @db.Uuid
+  rejectionReason  String?                      @map("rejection_reason") @db.Text
+  createdAt        DateTime                     @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime                     @updatedAt @map("updated_at") @db.Timestamptz
+
+  merchant       Merchant               @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  reviewedByUser User?                  @relation("VerificationReviewedBy", fields: [reviewedByUserId], references: [id])
+  evidences      VerificationEvidence[]
+
+  @@index([merchantId, submittedAt(sort: Desc)])
+  @@index([status, submittedAt(sort: Desc)])
+  @@map("verification_submissions")
+}
+
+model VerificationEvidence {
+  id               String   @id @default(uuid()) @db.Uuid
+  submissionId     String   @map("submission_id") @db.Uuid
+  storageKey       String   @map("storage_key") @db.Text
+  originalFilename String   @map("original_filename") @db.Text
+  mimeType         String   @map("mime_type") @db.VarChar
+  sizeBytes        BigInt   @map("size_bytes")
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  submission VerificationSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@map("verification_evidences")
+}
+
+model ProductViewEvent {
+  id             String   @id @default(uuid()) @db.Uuid
+  productId      String   @map("product_id") @db.Uuid
+  merchantId     String   @map("merchant_id") @db.Uuid
+  visitorKeyHash String   @map("visitor_key_hash") @db.VarChar
+  countedAt      DateTime @default(now()) @map("counted_at") @db.Timestamptz
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  merchant Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([productId, countedAt(sort: Desc)])
+  @@index([productId, visitorKeyHash, countedAt(sort: Desc)])
+  @@map("product_view_events")
+}
+
+model WhatsAppClickEvent {
+  id             String              @id @default(uuid()) @db.Uuid
+  merchantId     String              @map("merchant_id") @db.Uuid
+  productId      String?             @map("product_id") @db.Uuid
+  source         WhatsAppClickSource
+  visitorKeyHash String?             @map("visitor_key_hash") @db.VarChar
+  clickedAt      DateTime            @default(now()) @map("clicked_at") @db.Timestamptz
+  createdAt      DateTime            @default(now()) @map("created_at") @db.Timestamptz
+
+  merchant Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  product  Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([merchantId, clickedAt(sort: Desc)])
+  @@index([source, clickedAt(sort: Desc)])
+  @@map("whatsapp_click_events")
+}
+
+model Report {
+  id                 String           @id @default(uuid()) @db.Uuid
+  targetType         ReportTargetType @map("target_type")
+  reportedProductId  String?          @map("reported_product_id") @db.Uuid
+  reportedMerchantId String?          @map("reported_merchant_id") @db.Uuid
+  targetNameSnapshot String           @map("target_name_snapshot") @db.VarChar
+  reason             ReportReason
+  details            String?          @db.Text
+  reporterName       String?          @map("reporter_name") @db.VarChar
+  reporterWhatsapp   String?          @map("reporter_whatsapp") @db.VarChar
+  status             ReportStatus     @default(BARU)
+  reviewedByUserId   String?          @map("reviewed_by_user_id") @db.Uuid
+  reviewedAt         DateTime?        @map("reviewed_at") @db.Timestamptz
+  resolutionNote     String?          @map("resolution_note") @db.Text
+  createdAt          DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime         @updatedAt @map("updated_at") @db.Timestamptz
+
+  reportedProduct  Product?  @relation(fields: [reportedProductId], references: [id], onDelete: SetNull)
+  reportedMerchant Merchant? @relation(fields: [reportedMerchantId], references: [id], onDelete: SetNull)
+  reviewedByUser   User?     @relation("ReportReviewedBy", fields: [reviewedByUserId], references: [id])
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([reportedMerchantId, createdAt(sort: Desc)])
+  @@index([reportedProductId, createdAt(sort: Desc)])
+  @@map("reports")
+}
+
+model ModerationAction {
+  id                 String               @id @default(uuid()) @db.Uuid
+  actionType         ModerationActionType @map("action_type")
+  actorUserId        String               @map("actor_user_id") @db.Uuid
+  merchantId         String?              @map("merchant_id") @db.Uuid
+  productId          String?              @map("product_id") @db.Uuid
+  targetNameSnapshot String               @map("target_name_snapshot") @db.VarChar
+  reason             String?              @db.Text
+  createdAt          DateTime             @default(now()) @map("created_at") @db.Timestamptz
+
+  actorUser User      @relation("ModerationActor", fields: [actorUserId], references: [id])
+  merchant  Merchant? @relation(fields: [merchantId], references: [id])
+  product   Product?  @relation(fields: [productId], references: [id])
+
+  @@map("moderation_actions")
+}
+
+model Notification {
+  id               String           @id @default(uuid()) @db.Uuid
+  recipientUserId  String           @map("recipient_user_id") @db.Uuid
+  merchantId       String?          @map("merchant_id") @db.Uuid
+  type             NotificationType
+  title            String           @db.VarChar
+  message          String           @db.Text
+  relatedProductId String?          @map("related_product_id") @db.Uuid
+  readAt           DateTime?        @map("read_at") @db.Timestamptz
+  createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz
+
+  recipientUser  User      @relation(fields: [recipientUserId], references: [id], onDelete: Cascade)
+  merchant       Merchant? @relation(fields: [merchantId], references: [id])
+  relatedProduct Product?  @relation(fields: [relatedProductId], references: [id])
+
+  @@index([recipientUserId, readAt, createdAt(sort: Desc)])
+  @@map("notifications")
+}
+
+model Banner {
+  id              String    @id @default(uuid()) @db.Uuid
+  title           String    @db.VarChar
+  description     String?   @db.Text
+  imageStorageKey String    @map("image_storage_key") @db.Text
+  ctaText         String?   @map("cta_text") @db.VarChar
+  targetUrl       String?   @map("target_url") @db.Text
+  startAt         DateTime? @map("start_at") @db.Timestamptz
+  endAt           DateTime? @map("end_at") @db.Timestamptz
+  isActive        Boolean   @default(false) @map("is_active")
+  createdByUserId String    @map("created_by_user_id") @db.Uuid
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  createdByUser User @relation(fields: [createdByUserId], references: [id])
+
+  @@index([isActive, startAt, endAt])
+  @@map("banners")
+}
+
+model FeaturedMerchant {
+  id              String   @id @default(uuid()) @db.Uuid
+  merchantId      String   @unique @map("merchant_id") @db.Uuid
+  sortOrder       Int      @unique @map("sort_order") @db.SmallInt
+  createdByUserId String   @map("created_by_user_id") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  merchant      Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  createdByUser User     @relation(fields: [createdByUserId], references: [id])
+
+  @@map("featured_merchants")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  tokenHash String    @unique @map("token_hash") @db.Text
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz
+  usedAt    DateTime? @map("used_at") @db.Timestamptz
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_tokens")
+}
