@@ -21,6 +21,7 @@ export type ActiveMerchantMembershipRecord = {
   merchant: {
     status: MerchantStatus;
     verificationStatus: MerchantVerificationStatus;
+    suspensionReason: string | null;
   };
 };
 
@@ -63,6 +64,7 @@ export const findActiveMerchantMembership = async ({
         select: {
           status: true,
           verificationStatus: true,
+          suspensionReason: true,
         },
       },
     },

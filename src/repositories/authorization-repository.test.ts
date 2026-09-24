@@ -48,5 +48,13 @@ describe("authorization repository", () => {
         },
       }),
     );
+    const select =
+      database.merchantMembership.findFirst.mock.calls[0][0].select;
+    expect(select.merchant.select).toEqual({
+      status: true,
+      verificationStatus: true,
+      suspensionReason: true,
+    });
+    expect(select.merchant.select).not.toHaveProperty("suspendedByUserId");
   });
 });

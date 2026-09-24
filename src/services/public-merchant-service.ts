@@ -2,6 +2,10 @@ import "server-only";
 
 import { z } from "zod";
 import {
+  openingHoursSchema,
+  openingHourDays,
+} from "@/features/merchant-profile/profile-schema";
+import {
   findPublicMerchantBySlug,
   findPublicMerchants,
   type PublicMerchantDetailRecord,
@@ -28,7 +32,7 @@ export type PublicMerchantDetail = PublicMerchantSummary & {
 };
 
 type ImageUrlResolver = (storageKey: string) => string | null;
-const openingHoursSchema = z.record(z.string(), z.string());
+const legacyOpeningHoursSchema = z.record(z.string(), z.string());
 
 export const isSafeMerchantSlug = (slug: string): boolean =>
   slug.length > 0 &&
@@ -38,9 +42,19 @@ export const isSafeMerchantSlug = (slug: string): boolean =>
 const mapOpeningHours = (
   input: PublicMerchantDetailRecord["openingHours"],
 ): PublicMerchantDetail["openingHours"] => {
-  const parsed = openingHoursSchema.safeParse(input);
-  if (!parsed.success) return [];
-  return Object.entries(parsed.data).map(([label, value]) => ({
+  const structured = openingHoursSchema.safeParse(input);
+  if (structured.success) {
+    return openingHourDays.map(([day, label]) => {
+      const hours = structured.data[day];
+      return {
+        label,
+        value: hours.closed ? "Tutup" : `${hours.open}–${hours.close}`,
+      };
+    });
+  }
+  const legacy = legacyOpeningHoursSchema.safeParse(input);
+  if (!legacy.success) return [];
+  return Object.entries(legacy.data).map(([label, value]) => ({
     label,
     value,
   }));

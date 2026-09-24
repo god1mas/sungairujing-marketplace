@@ -98,4 +98,33 @@ describe("public merchant service", () => {
     expect(merchant?.whatsappUrl).toBeNull();
     expect(merchant?.openingHours).toEqual([]);
   });
+
+  it("renders the documented structured opening-hours representation", async () => {
+    const openingHours = Object.fromEntries(
+      ["senin", "selasa", "rabu", "kamis", "jumat", "sabtu", "minggu"].map(
+        (day, index) => [
+          day,
+          index === 6
+            ? { closed: true }
+            : { closed: false, open: "08:00", close: "17:00" },
+        ],
+      ),
+    );
+    const merchant = await getPublicMerchantDetail("merchant", {
+      findMerchant: vi.fn().mockResolvedValue({
+        ...summary,
+        publicWhatsappNumber: "6281234567890",
+        openingHours,
+        products: [],
+      }),
+    });
+    expect(merchant?.openingHours[0]).toEqual({
+      label: "Senin",
+      value: "08:00–17:00",
+    });
+    expect(merchant?.openingHours[6]).toEqual({
+      label: "Minggu",
+      value: "Tutup",
+    });
+  });
 });

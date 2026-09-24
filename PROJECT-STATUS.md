@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 5 — Cart & WhatsApp Checkout — **COMPLETED**
+Phase 6 — Merchant Dashboard — **COMPLETED**
 
 ## Sub-Phase Status
 
@@ -29,7 +29,12 @@ Phase 5 — Cart & WhatsApp Checkout — **COMPLETED**
 - Sub-Phase 4C — Product Detail — **COMPLETED**
 - Sub-Phase 4D — Merchant Pages — **COMPLETED**
 - Phase 5 — Cart & WhatsApp Checkout — **COMPLETED**
-- Phase 6 and later — **NOT STARTED**
+- Sub-Phase 6A — Dashboard — **COMPLETED**
+- Sub-Phase 6B — Products — **COMPLETED**
+- Sub-Phase 6C — Product Upload — **COMPLETED**
+- Sub-Phase 6D — Merchant Profile — **COMPLETED**
+- Sub-Phase 6E — Suspension Rules — **COMPLETED**
+- Phase 7 and later — **NOT STARTED**
 
 ## Completed
 
@@ -116,10 +121,30 @@ Phase 5 — Cart & WhatsApp Checkout — **COMPLETED**
 - Buyer checkout form with conditional delivery address and no persisted buyer or order data
 - Centralized WhatsApp checkout message and `wa.me` URL generation with cryptographically random communication references
 - Explicit estimated-product-total language without shipping calculation, payment, transaction, or sales claims
+- Authenticated merchant dashboard shell with responsive compact navigation
+- Tenant-scoped dashboard overview counts for total, available, and suspended products
+- Factual zero-product, loading, and safe dashboard error states
+- Tenant-scoped merchant product list with availability, moderation, category, price, and safe image states
+- Product create and edit flows with server-side Zod validation and active-category enforcement
+- Stable server-generated product slugs with collision handling and no approval queue
+- Tenant-scoped permanent product deletion with explicit confirmation and public-media cleanup attempt
+- Product ownership enforcement for list, edit reads, updates, and deletes
+- Tenant-scoped product image upload and management using the existing Phase 3 processing and storage pipeline
+- Server-enforced five-image limit with deterministic ordering and exactly-one-cover behavior
+- Failure compensation for uploaded objects and truthful storage-cleanup outcomes
+- Tenant-scoped merchant profile editor for allowed public identity fields
+- Structured weekly opening-hours editor and independent operational-status controls
+- Read-only login WhatsApp, slug, and verification presentation with protected admin fields
+- Merchant logo replacement through the existing Phase 3 processing pipeline and cleanup compensation
+- Dashboard integration of the existing Phase 2 account/change-password destination
+- Shared merchant suspension banner with merchant-visible reason and no internal moderation metadata
+- Coherent suspended-merchant read-only dashboard state across products, images, and profile management
+- Centralized active-merchant mutation enforcement retained for all public-content mutations
+- Public merchant/product and stale-cart suspension safeguards verified through authoritative server filters
 
 ## In Progress
 
-- No phase is currently in progress. Phase 5 is complete; Phase 6 has not started.
+- No phase is currently in progress. Phase 6 is complete; Phase 7 has not started.
 
 ## Known Issues
 
@@ -225,10 +250,45 @@ Phase 5 — Cart & WhatsApp Checkout — **COMPLETED**
 - Phase 5 Playwright smoke coverage: PASS (2 Chromium tests); database-backed checkout navigation was not run because disposable PostgreSQL was unavailable
 - `npm run build`: PASS at Phase 5 closure
 - `npm audit --audit-level=high`: PASS at Phase 5 closure (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 6A
+- `npm run typecheck`: PASS at Sub-Phase 6A
+- `npm run format:check`: PASS at Sub-Phase 6A
+- `npm run test`: PASS at Sub-Phase 6A (190 tests)
+- Phase 6A Playwright authorization smoke coverage: PASS (1 Chromium test); authenticated database-backed dashboard rendering was not run because disposable PostgreSQL was unavailable
+- `npm run build`: PASS at Sub-Phase 6A
+- `npm audit --audit-level=high`: PASS at Sub-Phase 6A (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 6B
+- `npm run typecheck`: PASS at Sub-Phase 6B
+- `npm run format:check`: PASS at Sub-Phase 6B
+- `npm run test`: PASS at Sub-Phase 6B (209 tests)
+- Phase 6A–6B Playwright authorization smoke coverage: PASS (2 Chromium tests); authenticated database-backed Product CRUD was not run because disposable PostgreSQL was unavailable
+- `npm run build`: PASS at Sub-Phase 6B
+- `npm audit --audit-level=high`: PASS at Sub-Phase 6B (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 6C
+- `npm run typecheck`: PASS at Sub-Phase 6C
+- `npm run format:check`: PASS at Sub-Phase 6C
+- `npm run test`: PASS at Sub-Phase 6C (220 tests)
+- Phase 6C external Supabase/database-backed browser coverage: LIMITED because local provider credentials are unavailable; deterministic unit/integration coverage passed
+- `npm run build`: PASS at Sub-Phase 6C
+- `npm audit --audit-level=high`: PASS at Sub-Phase 6C (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 6D
+- `npm run typecheck`: PASS at Sub-Phase 6D
+- `npm run format:check`: PASS at Sub-Phase 6D
+- `npm run test`: PASS at Sub-Phase 6D (236 tests)
+- Phase 6A–6D Playwright authorization smoke coverage: PASS (4 Chromium tests); authenticated database/Supabase-backed profile editing was not run because local external infrastructure is unavailable
+- `npm run build`: PASS at Sub-Phase 6D
+- `npm audit --audit-level=high`: PASS at Sub-Phase 6D (0 vulnerabilities)
+- `npm run lint`: PASS at Sub-Phase 6E / Phase 6 closure
+- `npm run typecheck`: PASS at Sub-Phase 6E / Phase 6 closure
+- `npm run format:check`: PASS at Sub-Phase 6E / Phase 6 closure
+- `npm run test`: PASS at Sub-Phase 6E / Phase 6 closure (243 tests)
+- Phase 6 Playwright authorization smoke coverage: PASS (4 Chromium tests); authenticated suspended-merchant browser coverage was not run because local database/provider infrastructure is unavailable
+- `npm run build`: PASS at Sub-Phase 6E / Phase 6 closure
+- `npm audit --audit-level=high`: PASS at Phase 6 closure (0 vulnerabilities)
 
 ## Build Status
 
-PASS — Phase 5 cart and WhatsApp checkout verified and completed
+PASS — Phase 6 merchant dashboard verified and completed
 
 ## Last Commit
 
@@ -236,4 +296,4 @@ PASS — Phase 5 cart and WhatsApp checkout verified and completed
 
 ## Next Action
 
-Await approval for the Phase 5 Git checkpoint. Do not begin Phase 6 automatically.
+Await approval for the Phase 6 Git checkpoint. Do not begin Phase 7 — Merchant Verification automatically.
