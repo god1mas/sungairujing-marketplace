@@ -3,6 +3,8 @@ import { CategoryLinks } from "@/components/catalog/category-links";
 import { getPublicCatalogFilterOptions } from "@/services/public-catalog-service";
 import { getPopularProducts } from "@/services/analytics-service";
 import { ProductCard } from "@/components/catalog/product-card";
+import { getPublicHomepageContent } from "@/services/admin-content-service";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Marketplace Produk Lokal Sungairujing",
@@ -21,6 +23,10 @@ export const metadata: Metadata = {
 export default async function Home() {
   let categories: { name: string; slug: string }[] = [];
   let popularProducts: Awaited<ReturnType<typeof getPopularProducts>> = [];
+  let content: Awaited<ReturnType<typeof getPublicHomepageContent>> = {
+    banners: [],
+    featured: [],
+  };
 
   try {
     categories = (await getPublicCatalogFilterOptions()).categories;
@@ -31,6 +37,11 @@ export default async function Home() {
     popularProducts = await getPopularProducts();
   } catch {
     // Popular analytics is optional; the homepage remains available.
+  }
+  try {
+    content = await getPublicHomepageContent();
+  } catch {
+    // Optional managed homepage content must not take down discovery.
   }
 
   return (
@@ -77,6 +88,65 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {content.featured.length ? (
+        <section className="bg-white" aria-labelledby="featured-title">
+          <div className="mx-auto max-w-(--container-app) px-4 py-12 sm:px-6 lg:px-8">
+            <h2 id="featured-title" className="text-2xl font-bold">
+              Merchant Pilihan
+            </h2>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+              {content.featured.map((merchant) => (
+                <a
+                  key={merchant.id}
+                  href={`/merchant/${merchant.slug}`}
+                  className="rounded-lg border bg-white p-4 font-semibold text-brand-700"
+                >
+                  {merchant.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {content.banners.length ? (
+        <section className="bg-neutral-50" aria-label="Promo">
+          <div className="mx-auto grid max-w-(--container-app) gap-4 px-4 py-12 sm:px-6 lg:px-8">
+            {content.banners.map((banner) => (
+              <article
+                key={banner.id}
+                className="overflow-hidden rounded-lg border bg-white sm:grid sm:grid-cols-2"
+              >
+                <Image
+                  src={banner.imageUrl}
+                  alt={banner.title}
+                  width={960}
+                  height={480}
+                  className="h-full w-full object-cover"
+                  unoptimized
+                />
+                <div className="p-6">
+                  <h2 className="text-2xl font-bold">{banner.title}</h2>
+                  {banner.description ? (
+                    <p className="mt-2 text-neutral-600">
+                      {banner.description}
+                    </p>
+                  ) : null}
+                  {banner.targetUrl ? (
+                    <a
+                      href={banner.targetUrl}
+                      className="mt-4 inline-flex min-h-11 items-center rounded-md bg-brand-700 px-4 font-semibold text-white"
+                    >
+                      {banner.ctaText || "Lihat selengkapnya"}
+                    </a>
+                  ) : null}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <CategoryLinks categories={categories} />
 

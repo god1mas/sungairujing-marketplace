@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 9 — Reports & Moderation — **COMPLETED**
+Phase 10 — Super Admin Content Management — **COMPLETED**
 
 ## Sub-Phase Status
 
@@ -37,7 +37,8 @@ Phase 9 — Reports & Moderation — **COMPLETED**
 - Phase 7 — Merchant Verification — **COMPLETED**
 - Phase 8 — Analytics & Popular Products — **COMPLETED**
 - Phase 9 — Reports & Moderation — **COMPLETED**
-- Phase 10 and later — **NOT STARTED**
+- Phase 10 — Super Admin Content Management — **COMPLETED**
+- Phase 11 and later — **NOT STARTED**
 
 ## Completed
 
@@ -174,12 +175,23 @@ Phase 9 — Reports & Moderation — **COMPLETED**
 - `npm run test -- --maxWorkers=2`: PASS at Phase 9 closure (285 tests)
 - Phase 9 Playwright public/authorization smoke coverage: PASS (2 Chromium tests); authenticated PostgreSQL-backed lifecycle coverage is LIMITED because local external infrastructure is unavailable
 - `npm run build`: PASS at Phase 9 closure
+- Super Admin merchant listing/detail, synchronized WhatsApp administration, and strong-confirmation permanent deletion
+- Category create/edit with normalized slug uniqueness and relation-safe disable/delete behavior
+- Banner CRUD with optimized public-media upload, safe replacement cleanup, schedule, active state, and safe target URLs
+- Featured Merchant management with positions 1–5, maximum five, deterministic ordering, and suspended-merchant public filtering
+- Truthful Super Admin overview metrics and managed homepage Banner/Merchant Pilihan sections
+- `npm run lint`: PASS at Phase 10 closure
+- `npm run typecheck`: PASS at Phase 10 closure
+- `npm run format:check`: PASS at Phase 10 closure
+- `npm run test`: PASS at Phase 10 closure (292 tests)
+- Phase 10 Playwright authorization smoke coverage: PASS (4 Chromium tests); authenticated PostgreSQL/Supabase lifecycle coverage is LIMITED
+- `npm run build`: PASS at Phase 10 closure
 - Centralized active-merchant mutation enforcement retained for all public-content mutations
 - Public merchant/product and stale-cart suspension safeguards verified through authoritative server filters
 
 ## In Progress
 
-- No phase is currently in progress. Phase 9 is complete; Phase 10 has not started.
+- No phase is currently in progress. Phase 10 is complete; Phase 11 has not started.
 
 ## Known Issues
 
@@ -323,7 +335,7 @@ Phase 9 — Reports & Moderation — **COMPLETED**
 
 ## Build Status
 
-PASS — Phase 9 reports and moderation verified and completed
+PASS — Phase 10 Super Admin content management verified and completed
 
 ## Last Commit
 
@@ -331,4 +343,4 @@ PASS — Phase 9 reports and moderation verified and completed
 
 ## Next Action
 
-Await approval for the Phase 9 Git checkpoint. Do not begin Phase 10 — Super Admin Content Management automatically.
+Await approval for the Phase 10 Git checkpoint. Do not begin Phase 11 — Notifications, QR, Share & PWA automatically.
