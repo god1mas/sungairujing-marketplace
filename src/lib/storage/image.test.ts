@@ -75,6 +75,15 @@ describe("public image processing", () => {
     ).rejects.toMatchObject({ code: "FILE_TOO_LARGE" });
   });
 
+  it("allows the exact 5 MB product boundary to reach byte decoding", async () => {
+    await expect(
+      processPublicImage("product", {
+        data: new ArrayBuffer(5 * 1024 * 1024),
+        mimeType: "image/jpeg",
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_IMAGE" });
+  });
+
   it("resizes products inside 1600px without enlargement", async () => {
     const result = await processPublicImage("product", {
       data: await createImage("jpeg", 2000, 1000),

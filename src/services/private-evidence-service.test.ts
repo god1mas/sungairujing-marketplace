@@ -246,6 +246,21 @@ describe("private evidence service", () => {
     expect(objectStorage.createSignedUrl).not.toHaveBeenCalled();
   });
 
+  it("denies a visitor before evidence lookup or signed URL generation", async () => {
+    const objectStorage = storage();
+    const findEvidence = vi.fn();
+
+    await expect(
+      createAuthorizedEvidenceSignedUrl("evidence-a", {
+        authorization: authorization({ authenticated: false }),
+        storage: objectStorage,
+        findEvidence,
+      }),
+    ).rejects.toBeInstanceOf(UnauthenticatedError);
+    expect(findEvidence).not.toHaveBeenCalled();
+    expect(objectStorage.createSignedUrl).not.toHaveBeenCalled();
+  });
+
   it("allows an authenticated Super Admin without merchant membership", async () => {
     const objectStorage = storage();
     const deps = authorization({

@@ -87,6 +87,16 @@ describe("private evidence validation", () => {
     ).rejects.toMatchObject({ code: "FILE_TOO_LARGE" });
   });
 
+  it("allows the exact 8 MB evidence boundary to reach byte validation", async () => {
+    await expect(
+      validateEvidenceFile({
+        data: new ArrayBuffer(8 * 1024 * 1024),
+        mimeType: "application/pdf",
+        originalFilename: "boundary.pdf",
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_FILE" });
+  });
+
   it("enforces at most three total evidence files", () => {
     expect(() => assertEvidenceFileCount(2, 1)).not.toThrow();
     expect(() => assertEvidenceFileCount(2, 2)).toThrowError(

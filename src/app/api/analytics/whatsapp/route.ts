@@ -7,6 +7,7 @@ import {
   VISITOR_COOKIE_MAX_AGE,
   VISITOR_COOKIE_NAME,
 } from "@/lib/analytics/visitor";
+import { consumePublicAnalyticsLimit } from "@/lib/rate-limit/public-analytics";
 import { recordWhatsAppClick } from "@/services/analytics-service";
 
 const schema = z.object({
@@ -20,6 +21,9 @@ export async function POST(request: Request) {
     return new NextResponse(null, { status: 403 });
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return new NextResponse(null, { status: 400 });
+  if (!(await consumePublicAnalyticsLimit(request, "whatsapp"))) {
+    return new NextResponse(null, { status: 204 });
+  }
   const raw = request.headers
     .get("cookie")
     ?.match(new RegExp(`(?:^|; )${VISITOR_COOKIE_NAME}=([^;]+)`))?.[1];

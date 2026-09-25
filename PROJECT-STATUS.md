@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 11 — Notifications, QR, Share & PWA — **COMPLETED**
+Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
 
 ## Sub-Phase Status
 
@@ -39,7 +39,8 @@ Phase 11 — Notifications, QR, Share & PWA — **COMPLETED**
 - Phase 9 — Reports & Moderation — **COMPLETED**
 - Phase 10 — Super Admin Content Management — **COMPLETED**
 - Phase 11 — Notifications, QR, Share & PWA — **COMPLETED**
-- Phase 12 and later — **NOT STARTED**
+- Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
+- Phase 13 and later — **NOT STARTED**
 
 ## Completed
 
@@ -195,10 +196,15 @@ Phase 11 — Notifications, QR, Share & PWA — **COMPLETED**
 - Serwist PWA integration, install manifest, brand app icons, and a capability-gated install affordance
 - Conservative service-worker policy limited to versioned static assets and icons; private routes, auth/session traffic, checkout data, and moderation-sensitive dynamic pages are never runtime-cached
 - Browserslist transitive vulnerability remediated through a targeted `4.29.0` override without downgrading Serwist or changing Next.js major version
+- Complete Merchant dashboard, Super Admin, mutation, session, tenant-isolation, private-evidence, upload, destructive-action, logging, checkout-persistence, and PWA security audit
+- Environment-aware CSP plus nosniff, strict referrer, permissions, and frame-denial response headers with deterministic and browser coverage
+- Banner destination hardening against dangerous schemes, protocol-relative destinations, backslash ambiguity, malformed URLs, and control characters
+- Privacy-safe public analytics burst limiting with hashed IP keys, Upstash production storage, local development storage, and documented fail-open analytics behavior
+- Expanded cross-tenant Product/evidence, suspended-state, Super Admin boundary, MIME spoofing, upload-boundary, XSS escaping, CSRF/origin, and direct-route manipulation tests
 
 ## In Progress
 
-- No phase is currently in progress. Phase 11 is complete; Phase 12 has not started.
+- No phase is currently in progress. Phase 12 is complete; Phase 13 has not started.
 
 ## Known Issues
 
@@ -210,6 +216,7 @@ Phase 11 — Notifications, QR, Share & PWA — **COMPLETED**
 - WhatsApp password recovery remains disabled until Meta provider credentials and an approved template are available; no delivery is simulated.
 - Real Supabase projects, buckets, and credentials are not configured in this repository; external network integration was not tested in Sub-Phase 3A.
 - Phase 11 authenticated database-backed notification and suspended-merchant QR browser lifecycles remain externally limited because local PostgreSQL/session fixtures were unavailable; authorization and URL behavior are covered deterministically.
+- Phase 12 authenticated PostgreSQL/Supabase-backed cross-tenant browser lifecycles remain externally limited because local database, session fixtures, and provider credentials are unavailable; the security decisions are covered deterministically at service/repository level.
 
 ## Tests
 
@@ -347,15 +354,22 @@ Phase 11 — Notifications, QR, Share & PWA — **COMPLETED**
 - Phase 11 Playwright manifest and anonymous authorization smoke coverage: PASS (2 Chromium tests)
 - `npm run build`: PASS at Phase 11 closure with Serwist service-worker bundling
 - `npm audit --audit-level=high`: PASS at Phase 11 closure (0 vulnerabilities)
+- `npm run lint`: PASS at Phase 12 closure
+- `npm run typecheck`: PASS at Phase 12 closure
+- `npm run format:check`: PASS at Phase 12 closure
+- `npm run test -- --maxWorkers=2`: PASS at Phase 12 closure (311 tests across 90 files)
+- Phase 12 full Playwright run: 29 Chromium tests observed PASS, including 4 focused Phase 12 tests; final process teardown is LIMITED by the documented Windows managed-server hang
+- `npm run build`: PASS at Phase 12 closure with Serwist service-worker bundling
+- `npm audit --audit-level=high`: PASS at Phase 12 closure (0 vulnerabilities)
 
 ## Build Status
 
-PASS — Phase 11 Notifications, QR, Share & PWA verified and completed
+PASS — Phase 12 Security Hardening & Test Expansion verified and completed
 
 ## Last Commit
 
-`a2650ff feat: implement super admin content management`
+`dde9198 feat: add notifications sharing merchant qr and pwa`
 
 ## Next Action
 
-Await approval for the Phase 11 Git checkpoint. Do not begin Phase 12 automatically.
+Await approval for the Phase 12 Git checkpoint. Do not begin Phase 13 automatically.

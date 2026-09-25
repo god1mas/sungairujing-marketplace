@@ -80,4 +80,37 @@ describe("ProductDetailView", () => {
       screen.queryByText(/rating|review|terjual/i),
     ).not.toBeInTheDocument();
   });
+
+  it("renders user-controlled product text as text rather than HTML", () => {
+    const payload = '<img src=x onerror="alert(1)">';
+    const { container } = render(
+      <ProductDetailView
+        product={{
+          id: "product-id",
+          name: payload,
+          slug: "safe-product",
+          description: `<script>alert("xss")</script>`,
+          price: "10000.00",
+          unit: "buah",
+          availability: "TERSEDIA",
+          category: { name: "Produk", slug: "produk" },
+          merchant: {
+            id: "merchant-id",
+            name: "Merchant",
+            slug: "merchant",
+            address: "Sungairujing",
+            whatsappUrl: null,
+          },
+          images: [],
+        }}
+      />,
+    );
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: payload }),
+    ).toBeVisible();
+    expect(screen.getByText('<script>alert("xss")</script>')).toBeVisible();
+    expect(container.querySelector("script")).toBeNull();
+    expect(container.querySelector("img")).toBeNull();
+  });
 });

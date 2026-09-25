@@ -8,13 +8,19 @@ describe("admin content validation", () => {
     expect(categorySchema.safeParse({ name: " " }).success).toBe(false);
   });
   it("rejects unsafe banner URLs and invalid date ranges", () => {
-    expect(
-      bannerSchema.safeParse({
-        title: "Promo",
-        targetUrl: "javascript:alert(1)",
-        isActive: true,
-      }).success,
-    ).toBe(false);
+    for (const targetUrl of [
+      "javascript:alert(1)",
+      "data:text/html,payload",
+      "vbscript:msgbox(1)",
+      "//evil.example/phishing",
+      "/\\evil.example/phishing",
+      "not a url",
+    ]) {
+      expect(
+        bannerSchema.safeParse({ title: "Promo", targetUrl, isActive: true })
+          .success,
+      ).toBe(false);
+    }
     expect(
       bannerSchema.safeParse({
         title: "Promo",
@@ -28,6 +34,13 @@ describe("admin content validation", () => {
       bannerSchema.safeParse({
         title: "Promo",
         targetUrl: "https://example.com",
+        isActive: true,
+      }).success,
+    ).toBe(true);
+    expect(
+      bannerSchema.safeParse({
+        title: "Promo",
+        targetUrl: "/products?category=makanan#catalog",
         isActive: true,
       }).success,
     ).toBe(true);

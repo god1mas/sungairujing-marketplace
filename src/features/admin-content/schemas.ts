@@ -19,18 +19,21 @@ export const merchantAdminSchema = z.object({
 const safeUrl = z
   .string()
   .trim()
-  .refine(
-    (v) =>
-      v.startsWith("/") ||
-      (() => {
-        try {
-          return new URL(v).protocol === "https:";
-        } catch {
-          return false;
-        }
-      })(),
-    "Gunakan path internal atau URL HTTPS.",
-  );
+  .refine((v) => {
+    if (
+      /^\/(?!\/)/.test(v) &&
+      !v.includes("\\") &&
+      !/[\u0000-\u001f]/.test(v)
+    ) {
+      return true;
+    }
+    try {
+      const url = new URL(v);
+      return url.protocol === "https:";
+    } catch {
+      return false;
+    }
+  }, "Gunakan path internal atau URL HTTPS.");
 export const bannerSchema = z
   .object({
     title: z.string().trim().min(2).max(120),

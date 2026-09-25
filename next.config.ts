@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
+import { createSecurityHeaders } from "./src/lib/security/headers";
 
 const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
@@ -23,6 +24,14 @@ if (supabaseUrl) {
 
 const nextConfig: NextConfig = {
   turbopack: {},
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: createSecurityHeaders(),
+      },
+    ];
+  },
   images: {
     remotePatterns: publicMediaPattern ? [publicMediaPattern] : [],
   },

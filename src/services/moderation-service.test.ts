@@ -38,15 +38,15 @@ describe("moderation service authorization", () => {
       expect.objectContaining({ actorUserId: "admin" }),
     );
   });
-  it("never executes moderation if Super Admin authorization fails", async () => {
-    mocks.authorize.mockRejectedValue(new Error("forbidden"));
+  it("rejects a Merchant calling a Super Admin-only mutation", async () => {
+    mocks.authorize.mockRejectedValue(new Error("merchant forbidden"));
     await expect(
       moderateTarget({
         action: "SUSPEND_MERCHANT",
         targetId,
         reason: "Alasan moderasi",
       }),
-    ).rejects.toThrow("forbidden");
+    ).rejects.toThrow("merchant forbidden");
     expect(mocks.suspendMerchant).not.toHaveBeenCalled();
   });
   it("uses server-authoritative actor for explicit moderation", async () => {

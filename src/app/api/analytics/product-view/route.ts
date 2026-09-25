@@ -6,6 +6,7 @@ import {
   VISITOR_COOKIE_MAX_AGE,
   VISITOR_COOKIE_NAME,
 } from "@/lib/analytics/visitor";
+import { consumePublicAnalyticsLimit } from "@/lib/rate-limit/public-analytics";
 import { recordProductView } from "@/services/analytics-service";
 
 const inputSchema = z.object({ productId: z.uuid() });
@@ -16,6 +17,9 @@ export async function POST(request: Request) {
     return new NextResponse(null, { status: 403 });
   const parsed = inputSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return new NextResponse(null, { status: 400 });
+  if (!(await consumePublicAnalyticsLimit(request, "product-view"))) {
+    return new NextResponse(null, { status: 204 });
+  }
   const rawCookie = request.headers
     .get("cookie")
     ?.match(new RegExp(`(?:^|; )${VISITOR_COOKIE_NAME}=([^;]+)`))?.[1];
