@@ -4,6 +4,8 @@ coverage/
 playwright-report/
 test-results/
 package-lock.json
+public/sw.js
+public/icons/*.svg
 
 # Approved project documentation is intentionally excluded from bulk formatting.
 AGENTS.md

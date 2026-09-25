@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 10 — Super Admin Content Management — **COMPLETED**
+Phase 11 — Notifications, QR, Share & PWA — **COMPLETED**
 
 ## Sub-Phase Status
 
@@ -38,7 +38,8 @@ Phase 10 — Super Admin Content Management — **COMPLETED**
 - Phase 8 — Analytics & Popular Products — **COMPLETED**
 - Phase 9 — Reports & Moderation — **COMPLETED**
 - Phase 10 — Super Admin Content Management — **COMPLETED**
-- Phase 11 and later — **NOT STARTED**
+- Phase 11 — Notifications, QR, Share & PWA — **COMPLETED**
+- Phase 12 and later — **NOT STARTED**
 
 ## Completed
 
@@ -188,10 +189,16 @@ Phase 10 — Super Admin Content Management — **COMPLETED**
 - `npm run build`: PASS at Phase 10 closure
 - Centralized active-merchant mutation enforcement retained for all public-content mutations
 - Public merchant/product and stale-cart suspension safeguards verified through authoritative server filters
+- Tenant-authorized merchant notification list with durable unread state, ownership-scoped mark-as-read, and fixed safe internal destinations
+- Product sharing through the Web Share API with clipboard fallback and accessible user feedback
+- Locally generated merchant QR codes containing only the configured canonical public merchant URL, shown publicly and in the merchant dashboard with download support
+- Serwist PWA integration, install manifest, brand app icons, and a capability-gated install affordance
+- Conservative service-worker policy limited to versioned static assets and icons; private routes, auth/session traffic, checkout data, and moderation-sensitive dynamic pages are never runtime-cached
+- Browserslist transitive vulnerability remediated through a targeted `4.29.0` override without downgrading Serwist or changing Next.js major version
 
 ## In Progress
 
-- No phase is currently in progress. Phase 10 is complete; Phase 11 has not started.
+- No phase is currently in progress. Phase 11 is complete; Phase 12 has not started.
 
 ## Known Issues
 
@@ -202,6 +209,7 @@ Phase 10 — Super Admin Content Management — **COMPLETED**
 - Seed image records use development storage keys; their matching media assets will require the later storage integration phase.
 - WhatsApp password recovery remains disabled until Meta provider credentials and an approved template are available; no delivery is simulated.
 - Real Supabase projects, buckets, and credentials are not configured in this repository; external network integration was not tested in Sub-Phase 3A.
+- Phase 11 authenticated database-backed notification and suspended-merchant QR browser lifecycles remain externally limited because local PostgreSQL/session fixtures were unavailable; authorization and URL behavior are covered deterministically.
 
 ## Tests
 
@@ -332,15 +340,22 @@ Phase 10 — Super Admin Content Management — **COMPLETED**
 - Phase 6 Playwright authorization smoke coverage: PASS (4 Chromium tests); authenticated suspended-merchant browser coverage was not run because local database/provider infrastructure is unavailable
 - `npm run build`: PASS at Sub-Phase 6E / Phase 6 closure
 - `npm audit --audit-level=high`: PASS at Phase 6 closure (0 vulnerabilities)
+- `npm run lint`: PASS at Phase 11 closure
+- `npm run typecheck`: PASS at Phase 11 closure
+- `npm run format:check`: PASS at Phase 11 closure
+- `npm run test -- --maxWorkers=2`: PASS at Phase 11 closure (302 tests)
+- Phase 11 Playwright manifest and anonymous authorization smoke coverage: PASS (2 Chromium tests)
+- `npm run build`: PASS at Phase 11 closure with Serwist service-worker bundling
+- `npm audit --audit-level=high`: PASS at Phase 11 closure (0 vulnerabilities)
 
 ## Build Status
 
-PASS — Phase 10 Super Admin content management verified and completed
+PASS — Phase 11 Notifications, QR, Share & PWA verified and completed
 
 ## Last Commit
 
-`f7f090b feat: implement merchant verification workflow`
+`a2650ff feat: implement super admin content management`
 
 ## Next Action
 
-Await approval for the Phase 10 Git checkpoint. Do not begin Phase 11 — Notifications, QR, Share & PWA automatically.
+Await approval for the Phase 11 Git checkpoint. Do not begin Phase 12 automatically.

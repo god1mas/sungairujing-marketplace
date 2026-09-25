@@ -5,11 +5,14 @@ import { MerchantLogo } from "./merchant-logo";
 import { MerchantStatus } from "./merchant-status";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-whatsapp-link";
 import { ReportForm } from "@/components/reports/report-form";
+import { MerchantQr } from "./merchant-qr";
 
 export function MerchantDetailView({
   merchant,
+  qr = null,
 }: {
   merchant: PublicMerchantDetail;
+  qr?: { url: string; dataUrl: string } | null;
 }) {
   return (
     <main id="main-content" className="bg-neutral-50">
@@ -93,6 +96,18 @@ export function MerchantDetailView({
               Hubungi merchant via WhatsApp
             </TrackedWhatsAppLink>
           ) : null}
+          <section
+            aria-labelledby="merchant-qr-title"
+            className="mt-8 border-t border-neutral-200 pt-6"
+          >
+            <h2 id="merchant-qr-title" className="font-bold">
+              QR Merchant
+            </h2>
+            <p className="mt-1 text-sm text-neutral-600">
+              Pindai untuk membuka halaman publik merchant ini.
+            </p>
+            <MerchantQr merchantName={merchant.name} qr={qr} />
+          </section>
         </header>
 
         <section aria-labelledby="merchant-products-title" className="mt-10">

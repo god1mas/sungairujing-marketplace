@@ -5,6 +5,7 @@ import { ProductGallery } from "./product-gallery";
 import { AddToCart } from "@/components/cart/add-to-cart";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-whatsapp-link";
 import { ReportForm } from "@/components/reports/report-form";
+import { ShareButton } from "@/components/sharing/share-button";
 
 export function ProductDetailView({
   product,
@@ -80,6 +81,10 @@ export function ProductDetailView({
                 Tanya via WhatsApp
               </TrackedWhatsAppLink>
             ) : null}
+            <ShareButton
+              title={product.name}
+              path={`/products/${encodeURIComponent(product.slug)}`}
+            />
 
             <section
               aria-labelledby="merchant-title"

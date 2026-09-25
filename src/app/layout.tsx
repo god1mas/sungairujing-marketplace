@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
+import { InstallAffordance } from "@/components/pwa/install-affordance";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.APP_URL ?? "http://localhost:3000"),
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
   },
   description:
     "Marketplace lokal untuk menemukan produk UMKM Desa Sungairujing.",
+  manifest: "/manifest.webmanifest",
   openGraph: {
     siteName: "Sungairujing Marketplace",
     locale: "id_ID",
@@ -24,6 +26,7 @@ export default function RootLayout({
     <html lang="id">
       <body className="min-h-screen bg-neutral-50 text-neutral-900 antialiased">
         {children}
+        <InstallAffordance />
       </body>
     </html>
   );

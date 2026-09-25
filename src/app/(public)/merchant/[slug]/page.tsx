@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { MerchantDetailView } from "@/components/merchant/merchant-detail-view";
 import { getPublicMerchantDetail } from "@/services/public-merchant-service";
+import { createMerchantQr } from "@/services/merchant-qr-service";
 
 type MerchantPageProps = { params: Promise<{ slug: string }> };
 const loadMerchant = cache(getPublicMerchantDetail);
@@ -70,5 +71,6 @@ export default async function MerchantPage({ params }: MerchantPageProps) {
   }
 
   if (!result.merchant) notFound();
-  return <MerchantDetailView merchant={result.merchant} />;
+  const qr = await createMerchantQr(result.merchant.slug);
+  return <MerchantDetailView merchant={result.merchant} qr={qr} />;
 }

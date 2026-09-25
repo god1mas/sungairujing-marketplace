@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Sungairujing Marketplace">
+  <rect width="512" height="512" rx="96" fill="#166534"/>
+  <path d="M122 176h268l-22 208H144z" fill="#fff"/>
+  <path d="M186 200v-40a70 70 0 0 1 140 0v40" fill="none" stroke="#bbf7d0" stroke-width="32" stroke-linecap="round"/>
+  <path d="M192 280h128" stroke="#166534" stroke-width="32" stroke-linecap="round"/>
+</svg>
