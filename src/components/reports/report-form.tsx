@@ -1,10 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import {
-  initialReportState,
-  submitReportAction,
-} from "@/features/reports/actions";
+import { submitReportAction } from "@/features/reports/actions";
+import { initialReportState } from "@/features/reports/action-state";
 
 const reasons = [
   ["ILLEGAL_OR_PROHIBITED", "Barang ilegal atau dilarang"],

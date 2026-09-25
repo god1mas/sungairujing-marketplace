@@ -5,17 +5,7 @@ import {
   UnauthenticatedError,
 } from "@/lib/auth/authorization";
 import { changePassword } from "@/services/account-security-service";
-
-export type ChangePasswordActionState = {
-  success: boolean;
-  message: string;
-  fieldErrors?: Record<string, string[]>;
-};
-
-export const initialChangePasswordActionState: ChangePasswordActionState = {
-  success: false,
-  message: "",
-};
+import type { ChangePasswordActionState } from "./change-password-state";
 
 export const changePasswordAction = async (
   _previousState: ChangePasswordActionState,

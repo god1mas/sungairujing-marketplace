@@ -13,10 +13,8 @@ vi.mock("@/services/account-security-service", () => ({
   changePassword: mocks.changePassword,
 }));
 
-import {
-  changePasswordAction,
-  initialChangePasswordActionState,
-} from "./change-password";
+import { changePasswordAction } from "./change-password";
+import { initialChangePasswordActionState } from "./change-password-state";
 
 const formData = () => {
   const data = new FormData();

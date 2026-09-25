@@ -1,10 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import {
-  initialVerificationActionState,
-  reviewVerificationAction,
-} from "@/features/merchant-verification/actions";
+import { reviewVerificationAction } from "@/features/merchant-verification/actions";
+import { initialVerificationActionState } from "@/features/merchant-verification/action-state";
 
 export function VerificationReviewForm({
   submissionId,

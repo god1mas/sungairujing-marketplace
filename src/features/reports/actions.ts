@@ -7,13 +7,7 @@ import {
   ReportRateLimitError,
   ReportTargetNotFoundError,
 } from "@/services/report-service";
-
-export type ReportActionState = {
-  success: boolean;
-  message?: string;
-  fieldErrors?: Record<string, string[]>;
-};
-export const initialReportState: ReportActionState = { success: false };
+import type { ReportActionState } from "./action-state";
 
 export async function submitReportAction(
   targetType: "PRODUCT" | "MERCHANT",

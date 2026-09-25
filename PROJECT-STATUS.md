@@ -201,6 +201,7 @@ Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
 - Banner destination hardening against dangerous schemes, protocol-relative destinations, backslash ambiguity, malformed URLs, and control characters
 - Privacy-safe public analytics burst limiting with hashed IP keys, Upstash production storage, local development storage, and documented fail-open analytics behavior
 - Expanded cross-tenant Product/evidence, suspended-state, Super Admin boundary, MIME spoofing, upload-boundary, XSS escaping, CSRF/origin, and direct-route manipulation tests
+- Post-Phase-12 Server Action runtime hotfix separating UI initial-state objects from all module-level `"use server"` action exports
 
 ## In Progress
 
@@ -361,15 +362,18 @@ Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
 - Phase 12 full Playwright run: 29 Chromium tests observed PASS, including 4 focused Phase 12 tests; final process teardown is LIMITED by the documented Windows managed-server hang
 - `npm run build`: PASS at Phase 12 closure with Serwist service-worker bundling
 - `npm audit --audit-level=high`: PASS at Phase 12 closure (0 vulnerabilities)
+- Post-Phase-12 registration hotfix: lint, typecheck, format check, build, and 312 Vitest tests across 90 files PASS
+- Post-Phase-12 registration Playwright smoke: PASS; `/register` loaded and server-side validation executed without the invalid Server Action export error
+- `npm audit --audit-level=high`: PASS after registration hotfix (0 vulnerabilities)
 
 ## Build Status
 
-PASS — Phase 12 Security Hardening & Test Expansion verified and completed
+PASS — Phase 12 remains completed; Merchant registration runtime hotfix verified
 
 ## Last Commit
 
-`dde9198 feat: add notifications sharing merchant qr and pwa`
+`7d1355b test: harden marketplace security and tenant isolation`
 
 ## Next Action
 
-Await approval for the Phase 12 Git checkpoint. Do not begin Phase 13 automatically.
+Await approval for the Merchant registration runtime hotfix Git checkpoint. Phase 13 remains not started.

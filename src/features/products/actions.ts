@@ -19,16 +19,7 @@ import {
   updateProduct,
   uploadProductImages,
 } from "@/services/merchant-product-service";
-
-export type ProductActionState = {
-  success: boolean;
-  message?: string;
-  fieldErrors?: Record<string, string[]>;
-};
-
-export const initialProductActionState: ProductActionState = {
-  success: false,
-};
+import type { ProductActionState } from "./action-state";
 
 const parseProductForm = (formData: FormData) =>
   productInputSchema.safeParse({

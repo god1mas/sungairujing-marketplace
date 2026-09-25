@@ -3,10 +3,8 @@
 import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
-import {
-  deleteProductAction,
-  initialProductActionState,
-} from "@/features/products/actions";
+import { deleteProductAction } from "@/features/products/actions";
+import { initialProductActionState } from "@/features/products/action-state";
 
 function DeleteButton({ name }: { name: string }) {
   const { pending } = useFormStatus();

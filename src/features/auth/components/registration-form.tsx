@@ -2,10 +2,8 @@
 
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import {
-  initialRegistrationActionState,
-  registerMerchantAction,
-} from "@/features/auth/actions/register-merchant";
+import { registerMerchantAction } from "@/features/auth/actions/register-merchant";
+import { initialRegistrationActionState } from "@/features/auth/actions/register-merchant-state";
 
 const FieldError = ({ errors, id }: { errors?: string[]; id: string }) =>
   errors?.length ? (

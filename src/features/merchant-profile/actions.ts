@@ -8,16 +8,7 @@ import {
   replaceMerchantLogo,
   updateMerchantProfile,
 } from "@/services/merchant-profile-service";
-
-export type MerchantProfileActionState = {
-  success: boolean;
-  message?: string;
-  fieldErrors?: Record<string, string[]>;
-};
-
-export const initialMerchantProfileActionState: MerchantProfileActionState = {
-  success: false,
-};
+import type { MerchantProfileActionState } from "./action-state";
 
 const safeError = (error: unknown): MerchantProfileActionState => {
   if (error instanceof ImageValidationError) {

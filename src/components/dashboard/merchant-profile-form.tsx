@@ -4,10 +4,10 @@ import Image from "next/image";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import {
-  initialMerchantProfileActionState,
   replaceMerchantLogoAction,
   updateMerchantProfileAction,
 } from "@/features/merchant-profile/actions";
+import { initialMerchantProfileActionState } from "@/features/merchant-profile/action-state";
 import {
   openingHourDays,
   type OpeningHours,

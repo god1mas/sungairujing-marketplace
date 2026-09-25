@@ -1,10 +1,10 @@
 "use client";
 import { useActionState } from "react";
 import {
-  initialModerationState,
   moderationAction,
   reportStatusAction,
 } from "@/features/moderation/actions";
+import { initialModerationState } from "@/features/moderation/action-state";
 
 export function ReportStatusForm({
   reportId,

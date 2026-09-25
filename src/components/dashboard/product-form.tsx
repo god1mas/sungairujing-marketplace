@@ -4,9 +4,9 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import {
   createProductAction,
-  initialProductActionState,
   updateProductAction,
 } from "@/features/products/actions";
+import { initialProductActionState } from "@/features/products/action-state";
 
 type Category = { id: string; name: string };
 type EditableProduct = {

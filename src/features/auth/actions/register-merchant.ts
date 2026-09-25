@@ -2,15 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { registerMerchant } from "@/services/merchant-registration-service";
-
-export type RegistrationActionState = {
-  message: string;
-  fieldErrors?: Record<string, string[]>;
-};
-
-export const initialRegistrationActionState: RegistrationActionState = {
-  message: "",
-};
+import type { RegistrationActionState } from "./register-merchant-state";
 
 export const registerMerchantAction = async (
   _previousState: RegistrationActionState,

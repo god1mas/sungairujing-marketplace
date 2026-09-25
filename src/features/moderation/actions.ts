@@ -5,9 +5,8 @@ import {
   changeReportStatus,
   moderateTarget,
 } from "@/services/moderation-service";
+import type { ModerationState } from "./action-state";
 
-export type ModerationState = { success: boolean; message?: string };
-export const initialModerationState: ModerationState = { success: false };
 export async function reportStatusAction(
   reportId: string,
   _state: ModerationState,

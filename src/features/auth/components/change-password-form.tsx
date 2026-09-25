@@ -2,10 +2,8 @@
 
 import { useActionState, useEffect } from "react";
 import { signOut } from "next-auth/react";
-import {
-  changePasswordAction,
-  initialChangePasswordActionState,
-} from "@/features/auth/actions/change-password";
+import { changePasswordAction } from "@/features/auth/actions/change-password";
+import { initialChangePasswordActionState } from "@/features/auth/actions/change-password-state";
 
 export const PasswordChangeSessionInvalidator = ({
   success,

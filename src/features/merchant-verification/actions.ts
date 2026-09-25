@@ -8,16 +8,8 @@ import {
   VerificationConflictError,
   VerificationNotFoundError,
 } from "@/services/merchant-verification-service";
+import type { VerificationActionState } from "./action-state";
 import { verificationReviewSchema } from "./schemas";
-
-export type VerificationActionState = {
-  success: boolean;
-  message?: string;
-  fieldErrors?: Record<string, string[]>;
-};
-export const initialVerificationActionState: VerificationActionState = {
-  success: false,
-};
 
 const evidenceError = (error: EvidenceValidationError) =>
   ({

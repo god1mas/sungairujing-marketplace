@@ -5,10 +5,10 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import {
   changeProductCoverAction,
-  initialProductActionState,
   removeProductImageAction,
   uploadProductImagesAction,
 } from "@/features/products/actions";
+import { initialProductActionState } from "@/features/products/action-state";
 
 type ProductImage = {
   id: string;

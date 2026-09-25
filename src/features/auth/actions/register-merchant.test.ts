@@ -11,10 +11,8 @@ vi.mock("@/services/merchant-registration-service", () => ({
 
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
 
-import {
-  initialRegistrationActionState,
-  registerMerchantAction,
-} from "./register-merchant";
+import { registerMerchantAction } from "./register-merchant";
+import { initialRegistrationActionState } from "./register-merchant-state";
 
 const createFormData = () => {
   const formData = new FormData();
@@ -30,16 +28,22 @@ const createFormData = () => {
 describe("registerMerchantAction", () => {
   beforeEach(() => vi.clearAllMocks());
 
+  it("keeps the UI initial state available outside the Server Action module", () => {
+    expect(initialRegistrationActionState).toEqual({ message: "" });
+  });
+
   it("redirects a successful registration to Login without creating a session", async () => {
     mocks.registerMerchant.mockResolvedValue({
       success: true,
       registration: { userId: "user-id", merchantId: "merchant-id" },
     });
 
-    await registerMerchantAction(
+    const actionResult = registerMerchantAction(
       initialRegistrationActionState,
       createFormData(),
     );
+    expect(actionResult).toBeInstanceOf(Promise);
+    await actionResult;
 
     expect(mocks.redirect).toHaveBeenCalledWith("/login?registered=1");
   });
