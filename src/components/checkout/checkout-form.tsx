@@ -8,6 +8,7 @@ import {
 } from "@/features/checkout/actions";
 import { formatRupiah } from "@/lib/format/currency";
 import type { ValidatedCartItem } from "@/services/cart-validation-service";
+import { TrackedWhatsAppLink } from "@/components/analytics/tracked-whatsapp-link";
 
 export function CheckoutForm({ merchantSlug }: { merchantSlug: string }) {
   const { items, hasHydrated } = useCartStore();
@@ -241,14 +242,14 @@ export function CheckoutForm({ merchantSlug }: { merchantSlug: string }) {
             <p className="text-sm text-success-text">
               Kode komunikasi: <strong>{result.referenceCode}</strong>
             </p>
-            <a
+            <TrackedWhatsAppLink
               href={result.whatsappUrl}
-              target="_blank"
-              rel="noreferrer"
+              source="CHECKOUT"
+              merchantSlug={merchantSlug}
               className="mt-3 inline-flex min-h-11 items-center rounded-md bg-brand-600 px-5 font-semibold text-white"
             >
               Lanjut ke WhatsApp
-            </a>
+            </TrackedWhatsAppLink>
           </div>
         ) : null}
       </form>

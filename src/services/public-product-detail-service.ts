@@ -15,7 +15,13 @@ export type PublicProductDetail = {
   unit: string;
   availability: "TERSEDIA" | "HABIS";
   category: { name: string; slug: string };
-  merchant: { id: string; name: string; slug: string; address: string };
+  merchant: {
+    id: string;
+    name: string;
+    slug: string;
+    address: string;
+    whatsappUrl: string | null;
+  };
   images: { url: string; alt: string; isCover: boolean }[];
 };
 
@@ -53,7 +59,15 @@ export const getPublicProductDetail = async (
     unit: record.unit,
     availability: record.availabilityStatus,
     category: record.category,
-    merchant: record.merchant,
+    merchant: {
+      id: record.merchant.id,
+      name: record.merchant.name,
+      slug: record.merchant.slug,
+      address: record.merchant.address,
+      whatsappUrl: /^62\d{8,15}$/.test(record.merchant.publicWhatsappNumber)
+        ? `https://wa.me/${record.merchant.publicWhatsappNumber}?text=${encodeURIComponent(`Halo ${record.merchant.name}, saya tertarik dengan ${record.name}.`)}`
+        : null,
+    },
     images: record.images.flatMap((image) => {
       const url = imageUrl(image.storageKey);
       return url

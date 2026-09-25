@@ -3,6 +3,7 @@ import { ProductCard } from "@/components/catalog/product-card";
 import type { PublicMerchantDetail } from "@/services/public-merchant-service";
 import { MerchantLogo } from "./merchant-logo";
 import { MerchantStatus } from "./merchant-status";
+import { TrackedWhatsAppLink } from "@/components/analytics/tracked-whatsapp-link";
 
 export function MerchantDetailView({
   merchant,
@@ -82,14 +83,14 @@ export function MerchantDetailView({
           </div>
 
           {merchant.whatsappUrl ? (
-            <a
+            <TrackedWhatsAppLink
               href={merchant.whatsappUrl}
-              target="_blank"
-              rel="noreferrer"
+              source="MERCHANT_PROFILE"
+              merchantSlug={merchant.slug}
               className="mt-6 inline-flex min-h-11 items-center rounded-md bg-brand-600 px-5 font-semibold text-white hover:bg-brand-700"
             >
               Hubungi merchant via WhatsApp
-            </a>
+            </TrackedWhatsAppLink>
           ) : null}
         </header>
 

@@ -8,6 +8,7 @@ const navigation = [
   { href: "/dashboard/products", label: "Produk" },
   { href: "/dashboard/profile", label: "Profil" },
   { href: "/dashboard/verification", label: "Verifikasi" },
+  { href: "/dashboard/analytics", label: "Analytics" },
   { href: "/dashboard/account", label: "Pengaturan Akun" },
 ];
 

@@ -11,7 +11,13 @@ export type PublicProductDetailRecord = {
   unit: string;
   availabilityStatus: "TERSEDIA" | "HABIS";
   category: { name: string; slug: string };
-  merchant: { id: string; name: string; slug: string; address: string };
+  merchant: {
+    id: string;
+    name: string;
+    slug: string;
+    address: string;
+    publicWhatsappNumber: string;
+  };
   images: { storageKey: string; altText: string | null; isCover: boolean }[];
 };
 
@@ -31,7 +37,15 @@ export const findPublicProductBySlug = async (
       unit: true,
       availabilityStatus: true,
       category: { select: { name: true, slug: true } },
-      merchant: { select: { id: true, name: true, slug: true, address: true } },
+      merchant: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          address: true,
+          publicWhatsappNumber: true,
+        },
+      },
       images: {
         orderBy: [{ isCover: "desc" }, { sortOrder: "asc" }, { id: "asc" }],
         take: 5,

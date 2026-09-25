@@ -19,6 +19,7 @@ const record = {
     name: "Dapur Bawean",
     slug: "dapur-bawean",
     address: "Desa Sungairujing",
+    publicWhatsappNumber: "6281234567890",
   },
   images: [
     { storageKey: "products/cover.webp", altText: null, isCover: true },

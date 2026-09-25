@@ -20,6 +20,7 @@ describe("ProductDetailView", () => {
             name: "Dapur Bawean",
             slug: "dapur-bawean",
             address: "Desa Sungairujing",
+            whatsappUrl: null,
           },
           images: [],
         }}
@@ -62,6 +63,7 @@ describe("ProductDetailView", () => {
             name: "Warung Kopi",
             slug: "warung-kopi",
             address: "Sungairujing",
+            whatsappUrl: null,
           },
           images: [],
         }}

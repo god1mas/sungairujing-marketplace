@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { ProductDetailView } from "@/components/product-detail/product-detail-view";
+import { ProductViewTracker } from "@/components/analytics/product-view-tracker";
 import { getPublicProductDetail } from "@/services/public-product-detail-service";
 
 type ProductDetailPageProps = {
@@ -70,5 +71,10 @@ export default async function ProductDetailPage({
 
   if (!result.product) notFound();
 
-  return <ProductDetailView product={result.product} />;
+  return (
+    <>
+      <ProductViewTracker productId={result.product.id} />
+      <ProductDetailView product={result.product} />
+    </>
+  );
 }

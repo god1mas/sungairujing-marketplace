@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { CategoryLinks } from "@/components/catalog/category-links";
 import { getPublicCatalogFilterOptions } from "@/services/public-catalog-service";
+import { getPopularProducts } from "@/services/analytics-service";
+import { ProductCard } from "@/components/catalog/product-card";
 
 export const metadata: Metadata = {
   title: "Marketplace Produk Lokal Sungairujing",
@@ -18,11 +20,17 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   let categories: { name: string; slug: string }[] = [];
+  let popularProducts: Awaited<ReturnType<typeof getPopularProducts>> = [];
 
   try {
     categories = (await getPublicCatalogFilterOptions()).categories;
   } catch {
     // The public homepage remains available when its optional data is unavailable.
+  }
+  try {
+    popularProducts = await getPopularProducts();
+  } catch {
+    // Popular analytics is optional; the homepage remains available.
   }
 
   return (
@@ -71,6 +79,34 @@ export default async function Home() {
       </section>
 
       <CategoryLinks categories={categories} />
+
+      <section
+        aria-labelledby="popular-products-title"
+        className="bg-neutral-50"
+      >
+        <div className="mx-auto max-w-(--container-app) px-4 py-12 sm:px-6 lg:px-8">
+          <p className="text-sm font-semibold text-brand-700">
+            Berdasarkan kunjungan detail produk
+          </p>
+          <h2
+            id="popular-products-title"
+            className="mt-1 text-2xl font-bold text-neutral-900"
+          >
+            Produk Populer
+          </h2>
+          {popularProducts.length > 0 ? (
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
+              {popularProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <p className="mt-5 rounded-lg border border-dashed border-neutral-300 bg-white p-6 text-neutral-600">
+              Belum ada data kunjungan produk yang cukup.
+            </p>
+          )}
+        </div>
+      </section>
 
       <section aria-labelledby="about-title" className="bg-white">
         <div className="mx-auto max-w-(--container-app) px-4 py-12 sm:px-6 sm:py-16 lg:px-8">

@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 7 — Merchant Verification — **COMPLETED**
+Phase 8 — Analytics & Popular Products — **COMPLETED**
 
 ## Sub-Phase Status
 
@@ -35,7 +35,8 @@ Phase 7 — Merchant Verification — **COMPLETED**
 - Sub-Phase 6D — Merchant Profile — **COMPLETED**
 - Sub-Phase 6E — Suspension Rules — **COMPLETED**
 - Phase 7 — Merchant Verification — **COMPLETED**
-- Phase 8 and later — **NOT STARTED**
+- Phase 8 — Analytics & Popular Products — **COMPLETED**
+- Phase 9 and later — **NOT STARTED**
 
 ## Completed
 
@@ -150,12 +151,23 @@ Phase 7 — Merchant Verification — **COMPLETED**
 - `npm run test -- --maxWorkers=2`: PASS at Phase 7 closure (258 tests)
 - Phase 7 Playwright authorization smoke coverage: PASS (2 Chromium tests); authenticated PostgreSQL/Supabase-backed lifecycle coverage is LIMITED because local external infrastructure is unavailable
 - `npm run build`: PASS at Phase 7 closure
+- First-party random visitor cookie with server-side SHA-256 pepper hashing
+- Rolling 24-hour product-view dedupe with PostgreSQL advisory transaction locking
+- Non-blocking PRODUCT_DETAIL, MERCHANT_PROFILE, and CHECKOUT WhatsApp interaction analytics
+- Tenant-scoped merchant analytics with WIB-aware periods and aggregated Recharts presentation
+- Homepage Produk Populer ranking limited to eight currently eligible products with counted views
+- `npm run lint`: PASS at Phase 8 closure
+- `npm run typecheck`: PASS at Phase 8 closure
+- `npm run format:check`: PASS at Phase 8 closure
+- `npm run test`: PASS at Phase 8 closure (272 tests)
+- Phase 8 Playwright public/authorization smoke coverage: PASS (3 Chromium tests); PostgreSQL-backed lifecycle coverage is LIMITED because local external infrastructure is unavailable
+- `npm run build`: PASS at Phase 8 closure
 - Centralized active-merchant mutation enforcement retained for all public-content mutations
 - Public merchant/product and stale-cart suspension safeguards verified through authoritative server filters
 
 ## In Progress
 
-- No phase is currently in progress. Phase 7 is complete; Phase 8 has not started.
+- No phase is currently in progress. Phase 8 is complete; Phase 9 has not started.
 
 ## Known Issues
 
@@ -299,12 +311,12 @@ Phase 7 — Merchant Verification — **COMPLETED**
 
 ## Build Status
 
-PASS — Phase 7 merchant verification verified and completed
+PASS — Phase 8 analytics and popular products verified and completed
 
 ## Last Commit
 
-`3406c2e feat: implement merchant dashboard and management`
+`f7f090b feat: implement merchant verification workflow`
 
 ## Next Action
 
-Await approval for the Phase 7 Git checkpoint. Do not begin Phase 8 — Analytics & Popular Products automatically.
+Await approval for the Phase 8 Git checkpoint. Do not begin Phase 9 — Reports & Moderation automatically.

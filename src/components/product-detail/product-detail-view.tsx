@@ -3,6 +3,7 @@ import { formatRupiah } from "@/lib/format/currency";
 import type { PublicProductDetail } from "@/services/public-product-detail-service";
 import { ProductGallery } from "./product-gallery";
 import { AddToCart } from "@/components/cart/add-to-cart";
+import { TrackedWhatsAppLink } from "@/components/analytics/tracked-whatsapp-link";
 
 export function ProductDetailView({
   product,
@@ -68,6 +69,16 @@ export function ProductDetailView({
               merchantId={product.merchant.id}
               disabled={!isAvailable}
             />
+            {product.merchant.whatsappUrl ? (
+              <TrackedWhatsAppLink
+                href={product.merchant.whatsappUrl}
+                source="PRODUCT_DETAIL"
+                productSlug={product.slug}
+                className="mt-3 inline-flex min-h-11 items-center rounded-md border border-brand-600 px-5 font-semibold text-brand-700"
+              >
+                Tanya via WhatsApp
+              </TrackedWhatsAppLink>
+            ) : null}
 
             <section
               aria-labelledby="merchant-title"
