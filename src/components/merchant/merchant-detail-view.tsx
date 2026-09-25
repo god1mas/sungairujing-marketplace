@@ -4,6 +4,7 @@ import type { PublicMerchantDetail } from "@/services/public-merchant-service";
 import { MerchantLogo } from "./merchant-logo";
 import { MerchantStatus } from "./merchant-status";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-whatsapp-link";
+import { ReportForm } from "@/components/reports/report-form";
 
 export function MerchantDetailView({
   merchant,
@@ -132,6 +133,7 @@ export function MerchantDetailView({
             </div>
           )}
         </section>
+        <ReportForm targetType="MERCHANT" targetSlug={merchant.slug} />
       </div>
     </main>
   );

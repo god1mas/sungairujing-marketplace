@@ -22,6 +22,12 @@ export default function AdminPage() {
           >
             Verifikasi merchant
           </Link>
+          <Link
+            href="/admin/reports"
+            className="min-h-11 rounded-md border border-brand-700 px-4 py-2 font-semibold text-brand-700"
+          >
+            Laporan publik
+          </Link>
           <LogoutButton />
         </div>
       </section>

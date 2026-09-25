@@ -73,7 +73,9 @@ describe("ProductDetailView", () => {
     expect(
       screen.getByRole("button", { name: "Tambah ke Cart" }),
     ).toBeEnabled();
-    expect(screen.queryByText(/whatsapp/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /tanya via whatsapp/i }),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByText(/rating|review|terjual/i),
     ).not.toBeInTheDocument();

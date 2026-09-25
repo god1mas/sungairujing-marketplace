@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 8 — Analytics & Popular Products — **COMPLETED**
+Phase 9 — Reports & Moderation — **COMPLETED**
 
 ## Sub-Phase Status
 
@@ -36,7 +36,8 @@ Phase 8 — Analytics & Popular Products — **COMPLETED**
 - Sub-Phase 6E — Suspension Rules — **COMPLETED**
 - Phase 7 — Merchant Verification — **COMPLETED**
 - Phase 8 — Analytics & Popular Products — **COMPLETED**
-- Phase 9 and later — **NOT STARTED**
+- Phase 9 — Reports & Moderation — **COMPLETED**
+- Phase 10 and later — **NOT STARTED**
 
 ## Completed
 
@@ -162,12 +163,23 @@ Phase 8 — Analytics & Popular Products — **COMPLETED**
 - `npm run test`: PASS at Phase 8 closure (272 tests)
 - Phase 8 Playwright public/authorization smoke coverage: PASS (3 Chromium tests); PostgreSQL-backed lifecycle coverage is LIMITED because local external infrastructure is unavailable
 - `npm run build`: PASS at Phase 8 closure
+- Anonymous Product and Merchant reports with optional reporter identity, authoritative target snapshots, and OTHER-detail validation
+- Privacy-safe public report rate limit at five submissions per hour with Upstash production adapter and local development adapter
+- Server-authorized report lifecycle (`BARU` → `DITINJAU` → `SELESAI`/`DITOLAK`) without automatic suspension
+- Transactional product/merchant suspension and merchant reactivation with moderation history and merchant notifications
+- Super Admin report queue/detail workflow with explicit, confirmed moderation actions
+- `npm run lint`: PASS at Phase 9 closure
+- `npm run typecheck`: PASS at Phase 9 closure
+- `npm run format:check`: PASS at Phase 9 closure
+- `npm run test -- --maxWorkers=2`: PASS at Phase 9 closure (285 tests)
+- Phase 9 Playwright public/authorization smoke coverage: PASS (2 Chromium tests); authenticated PostgreSQL-backed lifecycle coverage is LIMITED because local external infrastructure is unavailable
+- `npm run build`: PASS at Phase 9 closure
 - Centralized active-merchant mutation enforcement retained for all public-content mutations
 - Public merchant/product and stale-cart suspension safeguards verified through authoritative server filters
 
 ## In Progress
 
-- No phase is currently in progress. Phase 8 is complete; Phase 9 has not started.
+- No phase is currently in progress. Phase 9 is complete; Phase 10 has not started.
 
 ## Known Issues
 
@@ -311,7 +323,7 @@ Phase 8 — Analytics & Popular Products — **COMPLETED**
 
 ## Build Status
 
-PASS — Phase 8 analytics and popular products verified and completed
+PASS — Phase 9 reports and moderation verified and completed
 
 ## Last Commit
 
@@ -319,4 +331,4 @@ PASS — Phase 8 analytics and popular products verified and completed
 
 ## Next Action
 
-Await approval for the Phase 8 Git checkpoint. Do not begin Phase 9 — Reports & Moderation automatically.
+Await approval for the Phase 9 Git checkpoint. Do not begin Phase 10 — Super Admin Content Management automatically.

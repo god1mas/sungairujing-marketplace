@@ -4,6 +4,7 @@ import type { PublicProductDetail } from "@/services/public-product-detail-servi
 import { ProductGallery } from "./product-gallery";
 import { AddToCart } from "@/components/cart/add-to-cart";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-whatsapp-link";
+import { ReportForm } from "@/components/reports/report-form";
 
 export function ProductDetailView({
   product,
@@ -121,6 +122,7 @@ export function ProductDetailView({
             </Link>
           </section>
         </div>
+        <ReportForm targetType="PRODUCT" targetSlug={product.slug} />
       </div>
     </main>
   );
