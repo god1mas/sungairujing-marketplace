@@ -1,4 +1,6 @@
 import { hashPassword } from "@/lib/auth/password";
+import { logAuthDiagnostic } from "@/lib/auth/auth-diagnostic";
+import { logPrismaErrorDiagnostic } from "@/lib/db/prisma-error-diagnostic";
 import { createSlug } from "@/lib/slug";
 import {
   merchantRegistrationSchema,
@@ -40,6 +42,7 @@ export const registerMerchant = async (
   const validation = merchantRegistrationSchema.safeParse(input);
 
   if (!validation.success) {
+    logAuthDiagnostic("registration-validation-fail");
     return {
       success: false,
       message: "Periksa kembali data registrasi.",
@@ -47,11 +50,26 @@ export const registerMerchant = async (
     };
   }
 
+  logAuthDiagnostic("registration-validation-pass");
+
   const persist = dependencies.persist ?? createMerchantRegistration;
   const hash = dependencies.hash ?? hashPassword;
 
+  let passwordHash: string;
+  logAuthDiagnostic("registration-password-hash-start");
   try {
-    const passwordHash = await hash(validation.data.password);
+    passwordHash = await hash(validation.data.password);
+    logAuthDiagnostic("registration-password-hash-pass");
+  } catch {
+    logAuthDiagnostic("registration-password-hash-exception");
+    return {
+      success: false,
+      message: "Registrasi belum berhasil. Silakan coba lagi.",
+    };
+  }
+
+  logAuthDiagnostic("registration-persistence-start");
+  try {
     const registration = await persist({
       ownerName: validation.data.ownerName,
       merchantName: validation.data.merchantName,
@@ -62,8 +80,11 @@ export const registerMerchant = async (
       termsAcceptedAt: (dependencies.now ?? (() => new Date()))(),
     });
 
+    logAuthDiagnostic("registration-persistence-pass");
     return { success: true, registration };
   } catch (error) {
+    logAuthDiagnostic("registration-persistence-exception");
+    logPrismaErrorDiagnostic("registration-persistence", error);
     if (isWhatsappUniqueConstraintError(error)) {
       return {
         success: false,

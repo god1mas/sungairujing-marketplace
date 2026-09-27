@@ -1,4 +1,4 @@
-import { GlobalUserRole } from "@prisma/client";
+import { GlobalUserRole, Prisma } from "@prisma/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { hashPassword } from "@/lib/auth/password";
 import { authenticateCredentials, authenticateLogin } from "./auth-service";
@@ -130,6 +130,35 @@ describe("authenticateCredentials", () => {
     expect(output).not.toContain(user.passwordHash);
     expect(output).not.toContain(user.id);
     expect(output).not.toContain(password);
+  });
+
+  it("categorizes a Prisma lookup exception without changing thrown behavior", async () => {
+    vi.stubEnv("AUTH_DIAGNOSTIC_LOGGING", "true");
+    const logger = vi
+      .spyOn(console, "info")
+      .mockImplementation(() => undefined);
+    const error = new Prisma.PrismaClientInitializationError(
+      "sensitive database provider detail",
+      "6.12.0",
+      "P1001",
+    );
+
+    await expect(
+      authenticateCredentials(
+        { whatsappNumber: "081234567890", password: "password-benar" },
+        vi.fn().mockRejectedValue(error),
+      ),
+    ).rejects.toBe(error);
+
+    expect(logger).toHaveBeenCalledWith(
+      "[auth-diagnostic] user-lookup-exception",
+    );
+    expect(logger).toHaveBeenCalledWith(
+      "[auth-diagnostic] user-lookup-error-class:prisma-initialization-error",
+    );
+    const output = JSON.stringify(logger.mock.calls);
+    expect(output).not.toContain(error.message);
+    expect(output).not.toContain("P1001");
   });
 });
 

@@ -3,6 +3,7 @@ import { loginSchema, type LoginInput } from "@/features/auth/schemas/login";
 import { logAuthDiagnostic } from "@/lib/auth/auth-diagnostic";
 import { normalizeWhatsAppNumber } from "@/lib/auth/whatsapp";
 import { verifyPasswordResult } from "@/lib/auth/password";
+import { logPrismaErrorDiagnostic } from "@/lib/db/prisma-error-diagnostic";
 import {
   createLoginRateLimitKey,
   getLoginRateLimiter,
@@ -52,6 +53,7 @@ export const authenticateCredentials = async (
     user = await findUser(normalizedWhatsapp);
   } catch (error) {
     logAuthDiagnostic("user-lookup-exception");
+    logPrismaErrorDiagnostic("user-lookup", error);
     throw error;
   }
 
