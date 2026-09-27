@@ -156,6 +156,97 @@ describe("authenticateLogin", () => {
     expect(logger).toHaveBeenCalledWith("[auth-diagnostic] authorize-success");
   });
 
+  it("logs fixed key-construction and limiter-initialization success stages", async () => {
+    vi.stubEnv("AUTH_DIAGNOSTIC_LOGGING", "true");
+    const logger = vi
+      .spyOn(console, "info")
+      .mockImplementation(() => undefined);
+    const sensitiveKey = "rate-limit-key-that-must-not-be-logged";
+    const sensitiveIp = "203.0.113.77";
+    const sensitiveIdentifier = "081299999999";
+    const limiter = {
+      isAllowed: vi.fn().mockResolvedValue(false),
+      recordFailure: vi.fn(),
+    };
+
+    await authenticateLogin(
+      {
+        whatsappNumber: sensitiveIdentifier,
+        password: "credential-that-must-not-be-logged",
+      },
+      { ipAddress: sensitiveIp },
+      {
+        createRateLimitKey: vi.fn().mockReturnValue(sensitiveKey),
+        getLimiter: vi.fn().mockReturnValue(limiter),
+      },
+    );
+
+    expect(logger.mock.calls.map(([message]) => message)).toEqual([
+      "[auth-diagnostic] input-validation-pass",
+      "[auth-diagnostic] rate-limit-key-start",
+      "[auth-diagnostic] rate-limit-key-pass",
+      "[auth-diagnostic] rate-limiter-init-start",
+      "[auth-diagnostic] rate-limiter-init-pass",
+      "[auth-diagnostic] rate-limit-check-start",
+      "[auth-diagnostic] rate-limit-blocked",
+    ]);
+    const output = JSON.stringify(logger.mock.calls);
+    expect(output).not.toContain(sensitiveKey);
+    expect(output).not.toContain(sensitiveIp);
+    expect(output).not.toContain(sensitiveIdentifier);
+    expect(output).not.toContain("credential-that-must-not-be-logged");
+  });
+
+  it("logs only a fixed category when key construction throws", async () => {
+    vi.stubEnv("AUTH_DIAGNOSTIC_LOGGING", "true");
+    const logger = vi
+      .spyOn(console, "info")
+      .mockImplementation(() => undefined);
+    const error = new Error("sensitive-key-construction-detail");
+
+    await expect(
+      authenticateLogin(
+        { whatsappNumber: "081234567890", password: "password-benar" },
+        { ipAddress: "203.0.113.10" },
+        {
+          createRateLimitKey: vi.fn(() => {
+            throw error;
+          }),
+        },
+      ),
+    ).rejects.toBe(error);
+
+    expect(logger).toHaveBeenLastCalledWith(
+      "[auth-diagnostic] rate-limit-key-exception",
+    );
+    expect(JSON.stringify(logger.mock.calls)).not.toContain(error.message);
+  });
+
+  it("logs only a fixed category when limiter initialization throws", async () => {
+    vi.stubEnv("AUTH_DIAGNOSTIC_LOGGING", "true");
+    const logger = vi
+      .spyOn(console, "info")
+      .mockImplementation(() => undefined);
+    const error = new Error("sensitive-limiter-initialization-detail");
+
+    await expect(
+      authenticateLogin(
+        { whatsappNumber: "081234567890", password: "password-benar" },
+        { ipAddress: "203.0.113.10" },
+        {
+          getLimiter: vi.fn(() => {
+            throw error;
+          }),
+        },
+      ),
+    ).rejects.toBe(error);
+
+    expect(logger).toHaveBeenLastCalledWith(
+      "[auth-diagnostic] rate-limiter-init-exception",
+    );
+    expect(JSON.stringify(logger.mock.calls)).not.toContain(error.message);
+  });
+
   it.each([null, "wrong-password"])(
     "returns a generic null identity and records unknown/invalid credentials",
     async (failure) => {

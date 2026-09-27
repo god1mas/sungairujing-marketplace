@@ -3,6 +3,13 @@ const AUTH_DIAGNOSTIC_PREFIX = "[auth-diagnostic]";
 export type AuthDiagnosticStage =
   | "input-validation-pass"
   | "input-validation-fail"
+  | "rate-limit-key-start"
+  | "rate-limit-key-pass"
+  | "rate-limit-key-exception"
+  | "rate-limiter-init-start"
+  | "rate-limiter-init-pass"
+  | "rate-limiter-init-exception"
+  | "rate-limit-check-start"
   | "rate-limit-pass"
   | "rate-limit-blocked"
   | "rate-limit-exception"

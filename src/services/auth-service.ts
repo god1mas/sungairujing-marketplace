@@ -99,6 +99,8 @@ export const authenticateLogin = async (
   dependencies: {
     limiter?: LoginRateLimiter;
     findUser?: AuthUserLookup;
+    createRateLimitKey?: typeof createLoginRateLimitKey;
+    getLimiter?: typeof getLoginRateLimiter;
   } = {},
 ): Promise<AuthIdentity | null> => {
   const validation = loginSchema.safeParse(input);
@@ -108,13 +110,33 @@ export const authenticateLogin = async (
   const identifier = validation.success
     ? validation.data.whatsappNumber
     : String(input.whatsappNumber).trim().toLowerCase();
-  const key = createLoginRateLimitKey({
-    identifier,
-    ipAddress: context.ipAddress,
-  });
-  const limiter = dependencies.limiter ?? getLoginRateLimiter();
+  let key: string;
+  logAuthDiagnostic("rate-limit-key-start");
+  try {
+    key = (dependencies.createRateLimitKey ?? createLoginRateLimitKey)({
+      identifier,
+      ipAddress: context.ipAddress,
+    });
+    logAuthDiagnostic("rate-limit-key-pass");
+  } catch (error) {
+    logAuthDiagnostic("rate-limit-key-exception");
+    throw error;
+  }
+
+  let limiter: LoginRateLimiter;
+  logAuthDiagnostic("rate-limiter-init-start");
+  try {
+    limiter =
+      dependencies.limiter ??
+      (dependencies.getLimiter ?? getLoginRateLimiter)();
+    logAuthDiagnostic("rate-limiter-init-pass");
+  } catch (error) {
+    logAuthDiagnostic("rate-limiter-init-exception");
+    throw error;
+  }
 
   let isAllowed: boolean;
+  logAuthDiagnostic("rate-limit-check-start");
   try {
     isAllowed = await limiter.isAllowed(key);
   } catch (error) {
