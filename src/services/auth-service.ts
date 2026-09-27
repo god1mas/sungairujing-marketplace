@@ -1,7 +1,8 @@
 import type { GlobalUserRole } from "@prisma/client";
 import { loginSchema, type LoginInput } from "@/features/auth/schemas/login";
+import { logAuthDiagnostic } from "@/lib/auth/auth-diagnostic";
 import { normalizeWhatsAppNumber } from "@/lib/auth/whatsapp";
-import { verifyPassword } from "@/lib/auth/password";
+import { verifyPasswordResult } from "@/lib/auth/password";
 import {
   createLoginRateLimitKey,
   getLoginRateLimiter,
@@ -40,24 +41,49 @@ export const authenticateCredentials = async (
 
   try {
     normalizedWhatsapp = normalizeWhatsAppNumber(input.whatsappNumber);
+    logAuthDiagnostic("normalization-pass");
   } catch {
+    logAuthDiagnostic("normalization-fail");
     return null;
   }
 
-  const user = await findUser(normalizedWhatsapp);
+  let user: AuthUserRecord | null;
+  try {
+    user = await findUser(normalizedWhatsapp);
+  } catch (error) {
+    logAuthDiagnostic("user-lookup-exception");
+    throw error;
+  }
 
-  if (!user?.isActive) {
+  if (!user) {
+    logAuthDiagnostic("user-not-found");
     return null;
   }
 
-  const passwordIsValid = await verifyPassword(
+  logAuthDiagnostic("user-found");
+
+  if (!user.isActive) {
+    logAuthDiagnostic("user-inactive");
+    return null;
+  }
+
+  logAuthDiagnostic("user-active");
+
+  const passwordResult = await verifyPasswordResult(
     user.passwordHash,
     input.password,
   );
 
-  if (!passwordIsValid) {
+  if (passwordResult !== "pass") {
+    logAuthDiagnostic(
+      passwordResult === "exception"
+        ? "password-verify-exception"
+        : "password-verify-false",
+    );
     return null;
   }
+
+  logAuthDiagnostic("password-verify-pass");
 
   return {
     id: user.id,
@@ -76,6 +102,9 @@ export const authenticateLogin = async (
   } = {},
 ): Promise<AuthIdentity | null> => {
   const validation = loginSchema.safeParse(input);
+  logAuthDiagnostic(
+    validation.success ? "input-validation-pass" : "input-validation-fail",
+  );
   const identifier = validation.success
     ? validation.data.whatsappNumber
     : String(input.whatsappNumber).trim().toLowerCase();
@@ -85,9 +114,20 @@ export const authenticateLogin = async (
   });
   const limiter = dependencies.limiter ?? getLoginRateLimiter();
 
-  if (!(await limiter.isAllowed(key))) {
+  let isAllowed: boolean;
+  try {
+    isAllowed = await limiter.isAllowed(key);
+  } catch (error) {
+    logAuthDiagnostic("rate-limit-exception");
+    throw error;
+  }
+
+  if (!isAllowed) {
+    logAuthDiagnostic("rate-limit-blocked");
     return null;
   }
+
+  logAuthDiagnostic("rate-limit-pass");
 
   if (!validation.success) {
     await limiter.recordFailure(key);
@@ -101,6 +141,8 @@ export const authenticateLogin = async (
 
   if (!identity) {
     await limiter.recordFailure(key);
+  } else {
+    logAuthDiagnostic("authorize-success");
   }
 
   return identity;

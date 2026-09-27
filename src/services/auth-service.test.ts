@@ -1,5 +1,5 @@
 import { GlobalUserRole } from "@prisma/client";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { hashPassword } from "@/lib/auth/password";
 import { authenticateCredentials, authenticateLogin } from "./auth-service";
 
@@ -11,6 +11,11 @@ const createAuthUser = async () => ({
   globalRole: GlobalUserRole.USER,
   isActive: true,
   updatedAt: new Date("2026-09-24T00:00:00.000Z"),
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllEnvs();
 });
 
 describe("authenticateCredentials", () => {
@@ -75,10 +80,65 @@ describe("authenticateCredentials", () => {
       ),
     ).resolves.toMatchObject({ globalRole: GlobalUserRole.SUPER_ADMIN });
   });
+
+  it("distinguishes false and exception verification without changing failure behavior", async () => {
+    vi.stubEnv("AUTH_DIAGNOSTIC_LOGGING", "true");
+    const logger = vi
+      .spyOn(console, "info")
+      .mockImplementation(() => undefined);
+    const user = await createAuthUser();
+
+    await expect(
+      authenticateCredentials(
+        { whatsappNumber: user.whatsappNumber, password: "password-salah" },
+        vi.fn().mockResolvedValue(user),
+      ),
+    ).resolves.toBeNull();
+    await expect(
+      authenticateCredentials(
+        { whatsappNumber: user.whatsappNumber, password: "password-benar" },
+        vi.fn().mockResolvedValue({ ...user, passwordHash: "bukan-hash" }),
+      ),
+    ).resolves.toBeNull();
+
+    expect(logger).toHaveBeenCalledWith(
+      "[auth-diagnostic] password-verify-false",
+    );
+    expect(logger).toHaveBeenCalledWith(
+      "[auth-diagnostic] password-verify-exception",
+    );
+  });
+
+  it("logs successful authorization without logging authentication data", async () => {
+    vi.stubEnv("AUTH_DIAGNOSTIC_LOGGING", "true");
+    const logger = vi
+      .spyOn(console, "info")
+      .mockImplementation(() => undefined);
+    const user = await createAuthUser();
+    const password = "password-benar";
+
+    await authenticateCredentials(
+      { whatsappNumber: user.whatsappNumber, password },
+      vi.fn().mockResolvedValue(user),
+    );
+
+    expect(logger).toHaveBeenCalledWith(
+      "[auth-diagnostic] password-verify-pass",
+    );
+    const output = JSON.stringify(logger.mock.calls);
+    expect(output).not.toContain(user.whatsappNumber);
+    expect(output).not.toContain(user.passwordHash);
+    expect(output).not.toContain(user.id);
+    expect(output).not.toContain(password);
+  });
 });
 
 describe("authenticateLogin", () => {
   it("allows a valid login without recording a failure", async () => {
+    vi.stubEnv("AUTH_DIAGNOSTIC_LOGGING", "true");
+    const logger = vi
+      .spyOn(console, "info")
+      .mockImplementation(() => undefined);
     const user = await createAuthUser();
     const limiter = {
       isAllowed: vi.fn().mockResolvedValue(true),
@@ -93,6 +153,7 @@ describe("authenticateLogin", () => {
 
     expect(identity).toMatchObject({ id: user.id, globalRole: "USER" });
     expect(limiter.recordFailure).not.toHaveBeenCalled();
+    expect(logger).toHaveBeenCalledWith("[auth-diagnostic] authorize-success");
   });
 
   it.each([null, "wrong-password"])(

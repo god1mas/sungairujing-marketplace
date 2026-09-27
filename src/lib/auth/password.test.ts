@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hashPassword, verifyPassword } from "./password";
+import { hashPassword, verifyPassword, verifyPasswordResult } from "./password";
 
 describe("password utilities", () => {
   it("hashes and verifies passwords with Argon2id", async () => {
@@ -15,5 +15,8 @@ describe("password utilities", () => {
 
   it("fails closed for malformed hashes", async () => {
     await expect(verifyPassword("bukan-hash", "password")).resolves.toBe(false);
+    await expect(verifyPasswordResult("bukan-hash", "password")).resolves.toBe(
+      "exception",
+    );
   });
 });
