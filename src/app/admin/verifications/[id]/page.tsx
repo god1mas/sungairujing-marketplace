@@ -1,5 +1,7 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ExternalLink, FileCheck2, MapPin, Phone } from "lucide-react";
+import { PageHeader } from "@/components/admin/page-header";
+import { StatusBadge } from "@/components/admin/status-badge";
 import { VerificationReviewForm } from "@/components/admin/verification-review-form";
 import { createAuthorizedEvidenceSignedUrl } from "@/services/private-evidence-service";
 import {
@@ -27,64 +29,86 @@ export default async function VerificationReviewPage({
     })),
   );
   return (
-    <main className="px-4 py-8 sm:px-6">
-      <div className="mx-auto max-w-4xl">
-        <Link
-          href="/admin/verifications"
-          className="text-sm font-semibold text-brand-700"
-        >
-          ← Daftar verifikasi
-        </Link>
-        <h1 className="mt-3 text-3xl font-bold text-neutral-900">
-          Tinjau {submission.merchant.name}
-        </h1>
-        <dl className="mt-6 grid gap-4 rounded-lg border border-neutral-200 bg-white p-5 sm:grid-cols-2">
+    <div className="mx-auto max-w-5xl space-y-8">
+      <PageHeader
+        eyebrow="Tinjau pengajuan"
+        title={submission.merchant.name}
+        description="Periksa informasi merchant dan bukti usaha privat sebelum mengambil keputusan."
+        backHref="/admin/verifications"
+        backLabel="Daftar verifikasi"
+        actions={<StatusBadge status={submission.status} />}
+      />
+      <section className="rounded-lg border border-neutral-200 bg-white shadow-sm">
+        <div className="border-b border-neutral-200 px-5 py-4 sm:px-6">
+          <h2 className="text-lg font-bold text-neutral-900">
+            Informasi merchant
+          </h2>
+        </div>
+        <dl className="grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
           <div>
-            <dt className="text-sm text-neutral-500">WhatsApp publik</dt>
-            <dd className="font-semibold">
+            <dt className="flex items-center gap-2 text-sm font-semibold text-neutral-500">
+              <Phone aria-hidden="true" className="size-4" /> WhatsApp publik
+            </dt>
+            <dd className="mt-1 font-semibold text-neutral-900">
               {submission.merchant.publicWhatsappNumber}
             </dd>
           </div>
           <div>
-            <dt className="text-sm text-neutral-500">Alamat</dt>
-            <dd className="font-semibold">{submission.merchant.address}</dd>
+            <dt className="flex items-center gap-2 text-sm font-semibold text-neutral-500">
+              <MapPin aria-hidden="true" className="size-4" /> Alamat
+            </dt>
+            <dd className="mt-1 font-semibold text-neutral-900">
+              {submission.merchant.address}
+            </dd>
           </div>
         </dl>
-        <section className="my-6">
-          <h2 className="text-xl font-bold text-neutral-900">
-            Bukti usaha privat
-          </h2>
-          <p className="mt-1 text-sm text-neutral-600">
-            Tautan berikut bersifat sementara dan hanya tersedia bagi pengguna
-            berwenang.
-          </p>
-          <ul className="mt-3 space-y-2">
-            {evidenceLinks.map((item) => (
-              <li
-                key={item.id}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-neutral-200 bg-white p-3"
+      </section>
+      <section className="rounded-lg border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
+        <div className="flex items-start gap-3">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-info-bg text-info-text">
+            <FileCheck2 aria-hidden="true" className="size-5" />
+          </span>
+          <div>
+            <h2 className="text-xl font-bold text-neutral-900">
+              Bukti usaha privat
+            </h2>
+            <p className="mt-1 text-sm text-neutral-600">
+              Tautan bersifat sementara dan hanya tersedia bagi pengguna
+              berwenang.
+            </p>
+          </div>
+        </div>
+        <ul className="mt-3 space-y-2">
+          {evidenceLinks.map((item) => (
+            <li
+              key={item.id}
+              className="flex flex-col gap-3 rounded-md border border-neutral-200 bg-neutral-50 p-4 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <span className="min-w-0 truncate font-semibold text-neutral-800">
+                {item.originalFilename}
+              </span>
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md border border-brand-200 px-4 text-sm font-bold text-brand-700 hover:bg-brand-50"
               >
-                <span>{item.originalFilename}</span>
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-semibold text-brand-700"
-                >
-                  Buka bukti
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-        {submission.status === "PENDING" ? (
-          <VerificationReviewForm submissionId={submission.id} />
-        ) : (
-          <p className="rounded-lg bg-neutral-100 p-4 font-semibold">
+                Buka bukti
+                <ExternalLink aria-hidden="true" className="size-4" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+      {submission.status === "PENDING" ? (
+        <VerificationReviewForm submissionId={submission.id} />
+      ) : (
+        <section className="rounded-lg border border-neutral-200 bg-neutral-100 p-5">
+          <p className="font-semibold text-neutral-800">
             Pengajuan ini sudah diproses: {submission.status}.
           </p>
-        )}
-      </div>
-    </main>
+        </section>
+      )}
+    </div>
   );
 }

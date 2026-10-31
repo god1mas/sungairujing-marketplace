@@ -75,9 +75,22 @@ describe("admin content repository", () => {
       logoStorageKey: "merchants/m/logo.webp",
       memberships: [],
       products: [{ images: [{ storageKey: "merchants/m/products/p/a.webp" }] }],
+      verificationSubmissions: [
+        {
+          evidences: [
+            {
+              storageKey:
+                "verification/merchant/submission/business-evidence.pdf",
+            },
+          ],
+        },
+      ],
     });
     db.merchant.delete.mockResolvedValue({ id: "merchant" });
-    await permanentlyDeleteMerchant({ id: "merchant", actorUserId: "admin" });
+    const result = await permanentlyDeleteMerchant({
+      id: "merchant",
+      actorUserId: "admin",
+    });
     expect(db.moderationAction.create).toHaveBeenCalledWith({
       data: expect.objectContaining({
         targetNameSnapshot: "Merchant Lama",
@@ -88,5 +101,18 @@ describe("admin content repository", () => {
       where: { id: "merchant" },
     });
     expect(db).not.toHaveProperty("report.deleteMany");
+    expect(result).toEqual({
+      storageReferences: [
+        { bucket: "publicMedia", path: "merchants/m/logo.webp" },
+        {
+          bucket: "publicMedia",
+          path: "merchants/m/products/p/a.webp",
+        },
+        {
+          bucket: "privateEvidence",
+          path: "verification/merchant/submission/business-evidence.pdf",
+        },
+      ],
+    });
   });
 });

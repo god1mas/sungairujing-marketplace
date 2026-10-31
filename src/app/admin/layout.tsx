@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { AdminShell } from "@/components/admin/admin-shell";
 import { guardAdminArea } from "@/lib/auth/route-guard";
 
 export const metadata: Metadata = {
@@ -10,5 +11,5 @@ export default async function AdminLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   await guardAdminArea();
-  return children;
+  return <AdminShell>{children}</AdminShell>;
 }

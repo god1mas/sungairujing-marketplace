@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { BadgeCheck } from "lucide-react";
 import { reviewVerificationAction } from "@/features/merchant-verification/actions";
 import { initialVerificationActionState } from "@/features/merchant-verification/action-state";
 
@@ -16,8 +17,19 @@ export function VerificationReviewForm({
   return (
     <form
       action={action}
-      className="space-y-4 rounded-lg border border-neutral-200 bg-white p-5"
+      className="space-y-5 rounded-lg border border-neutral-200 bg-white p-5 shadow-sm sm:p-6"
     >
+      <div className="flex items-start gap-3 border-b border-neutral-200 pb-5">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-700">
+          <BadgeCheck aria-hidden="true" className="size-5" />
+        </span>
+        <div>
+          <h2 className="font-bold text-neutral-900">Keputusan verifikasi</h2>
+          <p className="mt-1 text-sm text-neutral-600">
+            Setujui bukti yang valid atau berikan alasan saat menolak.
+          </p>
+        </div>
+      </div>
       <div>
         <label
           htmlFor="rejectionReason"
@@ -32,7 +44,7 @@ export function VerificationReviewForm({
           id="rejectionReason"
           name="rejectionReason"
           rows={4}
-          className="mt-2 w-full rounded-md border border-neutral-300 px-3 py-2"
+          className="mt-2 w-full rounded-md border border-neutral-300 px-3 py-3"
           aria-describedby="rejectionReason-error"
         />
         {state.fieldErrors?.rejectionReason ? (
@@ -45,7 +57,9 @@ export function VerificationReviewForm({
         <p
           role={state.success ? "status" : "alert"}
           className={
-            state.success ? "text-sm text-brand-700" : "text-sm text-red-700"
+            state.success
+              ? "rounded-md border border-success-border bg-success-bg px-3 py-2 text-sm text-success-text"
+              : "rounded-md border border-error-border bg-error-bg px-3 py-2 text-sm text-error-text"
           }
         >
           {state.message}
@@ -56,7 +70,7 @@ export function VerificationReviewForm({
           name="decision"
           value="APPROVE"
           disabled={pending}
-          className="min-h-11 rounded-md bg-brand-700 px-4 py-2 font-semibold text-white disabled:opacity-60"
+          className="min-h-11 rounded-md bg-brand-600 px-4 py-2 font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
           Setujui
         </button>
@@ -64,7 +78,7 @@ export function VerificationReviewForm({
           name="decision"
           value="REJECT"
           disabled={pending}
-          className="min-h-11 rounded-md border border-red-700 px-4 py-2 font-semibold text-red-700 disabled:opacity-60"
+          className="min-h-11 rounded-md border border-error-text px-4 py-2 font-semibold text-error-text hover:bg-error-bg disabled:cursor-not-allowed disabled:opacity-60"
         >
           Tolak pengajuan
         </button>

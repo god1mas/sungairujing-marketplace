@@ -54,7 +54,13 @@ export const updateMerchant = async (id: string, raw: unknown) => {
   if (result !== "UPDATED") throw new AdminContentConflictError();
   return result;
 };
-export const deleteMerchant = async (id: string, confirmation: string) => {
+export const deleteMerchant = async (
+  id: string,
+  confirmation: string,
+  dependencies: {
+    createStorage?: typeof createSupabaseStorage;
+  } = {},
+) => {
   const actor = await authorize();
   const merchant = await repo.findAdminMerchant(id);
   if (!merchant || confirmation !== `HAPUS ${merchant.name}`)
@@ -64,12 +70,17 @@ export const deleteMerchant = async (id: string, confirmation: string) => {
     actorUserId: actor.id,
   });
   if (!result) throw new AdminContentConflictError();
-  const storage = createSupabaseStorage();
-  await Promise.allSettled(
-    result.storageKeys.map((path) =>
-      storage.remove({ bucket: "publicMedia", path }),
-    ),
+  if (!result.storageReferences.length) return result;
+
+  const storage = (dependencies.createStorage ?? createSupabaseStorage)();
+  const cleanupResults = await Promise.allSettled(
+    result.storageReferences.map((reference) => storage.remove(reference)),
   );
+  const cleanupFailure = cleanupResults.find(
+    (cleanupResult) => cleanupResult.status === "rejected",
+  );
+  if (cleanupFailure) throw cleanupFailure.reason;
+
   return result;
 };
 export const getCategories = async () => {

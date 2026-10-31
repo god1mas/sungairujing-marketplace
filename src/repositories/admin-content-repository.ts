@@ -1,5 +1,6 @@
 import { MerchantStatus, ModerationActionType, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
+import type { StorageObjectReference } from "@/lib/storage/types";
 export const getAdminOverview = () =>
   prisma.$transaction([
     prisma.merchant.count(),
@@ -88,6 +89,9 @@ export const permanentlyDeleteMerchant = (input: {
           logoStorageKey: true,
           memberships: { select: { userId: true } },
           products: { select: { images: { select: { storageKey: true } } } },
+          verificationSubmissions: {
+            select: { evidences: { select: { storageKey: true } } },
+          },
         },
       });
       if (!merchant) return null;
@@ -111,14 +115,24 @@ export const permanentlyDeleteMerchant = (input: {
             data: { isActive: false },
           });
       }
-      return {
-        storageKeys: [
-          merchant.logoStorageKey,
-          ...merchant.products.flatMap((p) =>
-            p.images.map((i) => i.storageKey),
-          ),
-        ].filter((v): v is string => Boolean(v)),
-      };
+      const storageReferences: StorageObjectReference[] = [
+        ...[merchant.logoStorageKey]
+          .filter((path): path is string => Boolean(path))
+          .map((path) => ({ bucket: "publicMedia" as const, path })),
+        ...merchant.products.flatMap((product) =>
+          product.images.map((image) => ({
+            bucket: "publicMedia" as const,
+            path: image.storageKey,
+          })),
+        ),
+        ...merchant.verificationSubmissions.flatMap((submission) =>
+          submission.evidences.map((evidence) => ({
+            bucket: "privateEvidence" as const,
+            path: evidence.storageKey,
+          })),
+        ),
+      ];
+      return { storageReferences };
     },
     { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
   );
