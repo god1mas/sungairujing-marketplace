@@ -28,9 +28,17 @@ test("public navigation remains usable at a small mobile width", async ({
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/");
 
+  await expect(
+    page.getByRole("img", { name: "Logo UMKM DESA SUNGAIRUJING" }).first(),
+  ).toBeVisible();
   await expect(page.getByRole("link", { name: "Cari" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Keranjang" })).toBeVisible();
   await expect(page.getByText("Menu", { exact: true })).toBeVisible();
+
+  const hasHorizontalOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth > window.innerWidth,
+  );
+  expect(hasHorizontalOverflow).toBe(false);
 });
 
 test("anonymous visitor can open the product catalog", async ({ page }) => {

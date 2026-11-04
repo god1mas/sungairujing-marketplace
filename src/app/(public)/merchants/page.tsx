@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { MerchantCard } from "@/components/merchant/merchant-card";
+import { BRAND_NAME } from "@/constants/branding";
 import { getPublicMerchants } from "@/services/public-merchant-service";
 
 export const metadata: Metadata = {
   title: "Daftar Merchant",
-  description: "Kenali UMKM lokal yang bergabung di Sungairujing Marketplace.",
+  description: `Kenali UMKM lokal yang bergabung di ${BRAND_NAME}.`,
   alternates: { canonical: "/merchants" },
   openGraph: {
     type: "website",
     locale: "id_ID",
-    title: "Merchant Sungairujing Marketplace",
-    description:
-      "Kenali UMKM lokal yang bergabung di Sungairujing Marketplace.",
+    title: `Merchant ${BRAND_NAME}`,
+    description: `Kenali UMKM lokal yang bergabung di ${BRAND_NAME}.`,
   },
 };
 

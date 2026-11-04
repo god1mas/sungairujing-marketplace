@@ -11,7 +11,8 @@ test("exposes a valid PWA manifest without requiring installation", async ({
   const response = await page.request.get("/manifest.webmanifest");
   expect(response.ok()).toBeTruthy();
   const manifest = await response.json();
-  expect(manifest.name).toBe("Sungairujing Marketplace");
+  expect(manifest.name).toBe("UMKM DESA SUNGAIRUJING");
+  expect(manifest.short_name).toBe("UMKM DESA SUNGAIRUJING");
   expect(manifest.icons).toHaveLength(2);
 });
 

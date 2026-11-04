@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BrandLogo } from "@/components/branding/brand-logo";
+import { BRAND_NAME } from "@/constants/branding";
 import { LoginForm } from "@/features/auth/components/login-form";
 
 export const metadata: Metadata = {
   title: "Login",
-  description: "Login merchant dan Super Admin Sungairujing Marketplace.",
+  description: `Login merchant dan Super Admin ${BRAND_NAME}.`,
 };
 
 export default async function LoginPage({
@@ -20,12 +22,10 @@ export default async function LoginPage({
         aria-labelledby="login-title"
         className="mx-auto w-full max-w-md rounded-lg border border-neutral-200 bg-white p-5 shadow-sm sm:p-8"
       >
-        <p className="text-sm font-semibold text-brand-700">
-          Sungairujing Marketplace
-        </p>
+        <BrandLogo className="mx-auto h-24 w-auto" preload sizes="129px" />
         <h1
           id="login-title"
-          className="mt-2 text-3xl font-bold tracking-tight text-neutral-900"
+          className="mt-5 text-3xl font-bold tracking-tight text-neutral-900"
         >
           Login
         </h1>

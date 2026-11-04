@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { registerMerchantAction } from "@/features/auth/actions/register-merchant";
 import { initialRegistrationActionState } from "@/features/auth/actions/register-merchant-state";
+import { BRAND_NAME } from "@/constants/branding";
 
 const FieldError = ({ errors, id }: { errors?: string[]; id: string }) =>
   errors?.length ? (
@@ -163,7 +164,7 @@ export const RegistrationForm = () => {
             className="mt-1 size-5 accent-brand-700"
           />
           <label htmlFor="termsAccepted" className="text-sm text-neutral-700">
-            Saya menyetujui syarat dan ketentuan Sungairujing Marketplace.
+            Saya menyetujui syarat dan ketentuan {BRAND_NAME}.
           </label>
         </div>
         <FieldError errors={error("termsAccepted")} id="termsAccepted-error" />

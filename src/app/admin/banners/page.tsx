@@ -1,10 +1,11 @@
-import { ImageIcon, Plus } from "lucide-react";
+import { AlertTriangle, ImageIcon, Plus } from "lucide-react";
 import { PageHeader } from "@/components/admin/page-header";
 import { StatusBadge } from "@/components/admin/status-badge";
 import {
   deleteBannerAction,
   saveBannerAction,
 } from "@/features/admin-content/actions";
+import { getBannerActionErrorMessage } from "@/features/admin-content/banner-action-error";
 import { getBanners } from "@/services/admin-content-service";
 const Form = ({
   item,
@@ -86,7 +87,12 @@ const Form = ({
     </button>
   </form>
 );
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const message = getBannerActionErrorMessage((await searchParams).error);
   const items = await getBanners();
   return (
     <div className="space-y-8">
@@ -99,6 +105,19 @@ export default async function Page() {
           </span>
         }
       />
+
+      {message ? (
+        <div
+          role="alert"
+          className="flex items-start gap-3 rounded-md border border-error-border bg-error-bg p-4 text-error-text"
+        >
+          <AlertTriangle
+            aria-hidden="true"
+            className="mt-0.5 size-5 shrink-0"
+          />
+          <p className="text-sm font-semibold">{message}</p>
+        </div>
+      ) : null}
 
       <section className="rounded-lg border border-neutral-200 bg-white shadow-sm">
         <div className="flex items-start gap-3 border-b border-neutral-200 px-5 py-4 sm:px-6">

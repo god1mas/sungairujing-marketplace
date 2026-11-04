@@ -173,12 +173,15 @@ export const saveBanner = (input: {
   endAt?: Date;
   isActive: boolean;
   actorUserId: string;
-}) =>
-  prisma.banner.upsert({
-    where: { id: input.id },
-    create: { ...input, createdByUserId: input.actorUserId },
-    update: input,
+}) => {
+  const { actorUserId, ...banner } = input;
+
+  return prisma.banner.upsert({
+    where: { id: banner.id },
+    create: { ...banner, createdByUserId: actorUserId },
+    update: banner,
   });
+};
 export const deleteBanner = (id: string) =>
   prisma.banner.delete({ where: { id }, select: { imageStorageKey: true } });
 export const listFeatured = () =>

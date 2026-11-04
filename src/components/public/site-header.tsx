@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandLogo } from "@/components/branding/brand-logo";
 
 const navigation = [
   { href: "/products", label: "Produk" },
@@ -14,12 +15,17 @@ export function SiteHeader({
 }) {
   return (
     <header className="border-b border-neutral-200 bg-white">
-      <div className="mx-auto flex min-h-16 max-w-(--container-app) items-center gap-3 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-h-20 max-w-(--container-app) items-center gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="mr-auto inline-flex min-h-11 items-center text-base font-bold tracking-tight text-brand-800 sm:text-lg"
+          aria-label="Beranda UMKM DESA SUNGAIRUJING"
+          className="mr-auto inline-flex min-h-11 shrink-0 items-center rounded-md focus-visible:outline-brand-700"
         >
-          Sungairujing<span className="hidden sm:inline"> Marketplace</span>
+          <BrandLogo
+            className="h-14 w-auto sm:h-16"
+            preload
+            sizes="(max-width: 640px) 76px, 86px"
+          />
         </Link>
 
         <nav

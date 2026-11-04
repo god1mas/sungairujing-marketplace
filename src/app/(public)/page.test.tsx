@@ -1,5 +1,19 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("@/services/public-catalog-service", () => ({
+  getPublicCatalogFilterOptions: vi.fn(async () => ({ categories: [] })),
+}));
+vi.mock("@/services/analytics-service", () => ({
+  getPopularProducts: vi.fn(async () => []),
+}));
+vi.mock("@/services/admin-content-service", () => ({
+  getPublicHomepageContent: vi.fn(async () => ({
+    banners: [],
+    featured: [],
+  })),
+}));
+
 import Home, { metadata } from "./page";
 
 afterEach(cleanup);
@@ -44,7 +58,7 @@ describe("public homepage shell", () => {
       expect.objectContaining({
         type: "website",
         locale: "id_ID",
-        title: "Sungairujing Marketplace",
+        title: "UMKM DESA SUNGAIRUJING",
       }),
     );
   });

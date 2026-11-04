@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Settings, ShieldCheck, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { BrandLogo } from "@/components/branding/brand-logo";
 import { LogoutButton } from "@/features/auth/components/logout-button";
 import {
   adminNavigation,
@@ -20,17 +21,10 @@ function AdminSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         <Link
           href="/admin"
           onClick={onNavigate}
-          className="flex min-h-12 items-center gap-3 rounded-lg focus-visible:outline-white"
+          aria-label="Panel Admin UMKM DESA SUNGAIRUJING"
+          className="flex min-h-14 items-center rounded-lg bg-white p-1.5 focus-visible:outline-white"
         >
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-white text-brand-800 shadow-sm">
-            <ShieldCheck aria-hidden="true" className="size-6" />
-          </span>
-          <span className="min-w-0">
-            <span className="block text-sm font-bold tracking-tight">
-              Sungairujing
-            </span>
-            <span className="block text-xs text-brand-100">Marketplace</span>
-          </span>
+          <BrandLogo className="h-14 w-auto" sizes="76px" />
         </Link>
       </div>
 

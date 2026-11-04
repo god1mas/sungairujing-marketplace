@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { MerchantDetailView } from "@/components/merchant/merchant-detail-view";
 import { getPublicMerchantDetail } from "@/services/public-merchant-service";
+import { BRAND_NAME } from "@/constants/branding";
 import { createMerchantQr } from "@/services/merchant-qr-service";
 
 type MerchantPageProps = { params: Promise<{ slug: string }> };
@@ -17,14 +18,13 @@ export async function generateMetadata({
   if (!merchant) {
     return {
       title: "Merchant Tidak Ditemukan",
-      description: "Merchant tidak tersedia di Sungairujing Marketplace.",
+      description: `Merchant tidak tersedia di ${BRAND_NAME}.`,
       robots: { index: false, follow: false },
     };
   }
 
   const description = (
-    merchant.description ??
-    `Profil ${merchant.name} di Sungairujing Marketplace.`
+    merchant.description ?? `Profil ${merchant.name} di ${BRAND_NAME}.`
   )
     .trim()
     .slice(0, 160);

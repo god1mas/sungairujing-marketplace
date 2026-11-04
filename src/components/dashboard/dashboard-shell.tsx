@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { BrandLogo } from "@/components/branding/brand-logo";
 import { LogoutButton } from "@/features/auth/components/logout-button";
 import { SuspensionBanner } from "./suspension-banner";
 
@@ -24,8 +25,12 @@ export function DashboardShell({
     <div className="min-h-screen bg-neutral-50 lg:grid lg:grid-cols-[16rem_1fr]">
       <aside className="border-b border-neutral-200 bg-white lg:min-h-screen lg:border-r lg:border-b-0">
         <div className="mx-auto flex max-w-app items-center justify-between gap-4 px-4 py-4 lg:block lg:px-6 lg:py-8">
-          <Link href="/dashboard" className="text-lg font-bold text-brand-700">
-            Sungairujing
+          <Link
+            href="/dashboard"
+            aria-label="Dashboard Merchant UMKM DESA SUNGAIRUJING"
+            className="flex min-h-12 items-center gap-3 rounded-md text-lg font-bold text-brand-700"
+          >
+            <BrandLogo className="h-12 w-auto" sizes="64px" />
             <span className="block text-xs font-semibold tracking-wide text-neutral-500 uppercase">
               Dashboard Merchant
             </span>

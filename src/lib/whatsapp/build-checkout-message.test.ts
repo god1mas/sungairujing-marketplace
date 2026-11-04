@@ -25,6 +25,7 @@ describe("checkout WhatsApp helpers", () => {
     expect(message).toContain("Metode: Diantar");
     expect(message).toContain("Alamat: Sungairujing");
     expect(message).toContain("Kode: SRM-260924-A7K2");
+    expect(message).toContain("dari UMKM DESA SUNGAIRUJING.");
     expect(message).toContain("Mohon konfirmasi ketersediaan");
   });
 

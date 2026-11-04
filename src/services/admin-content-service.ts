@@ -104,42 +104,53 @@ export const saveBanner = async (
   id: string | undefined,
   raw: unknown,
   file?: File,
+  dependencies: {
+    createStorage?: typeof createSupabaseStorage;
+  } = {},
 ) => {
   const actor = await authorize();
   const data = bannerSchema.parse(raw);
   const bannerId = id ?? randomUUID();
   const current = id ? await repo.findBanner(id) : null;
   if (!file?.size && !current) throw new AdminContentConflictError();
-  const storage = createSupabaseStorage();
+  let storage: ReturnType<typeof createSupabaseStorage> | undefined;
   let uploaded: Awaited<ReturnType<typeof uploadBannerImage>> | undefined;
   try {
-    if (file?.size)
+    if (file?.size) {
+      storage = (dependencies.createStorage ?? createSupabaseStorage)();
       uploaded = await uploadBannerImage({
         bannerId,
         image: { data: await file.arrayBuffer(), mimeType: file.type },
         storage,
       });
+    }
     await repo.saveBanner({
       id: bannerId,
       ...data,
       imageStorageKey: uploaded?.reference.path ?? current!.imageStorageKey,
       actorUserId: actor.id,
     });
-    if (uploaded && current)
+    if (uploaded && current && storage)
       await storage
         .remove({ bucket: "publicMedia", path: current.imageStorageKey })
         .catch(() => undefined);
     return bannerId;
   } catch (error) {
-    if (uploaded)
+    if (uploaded && storage)
       await storage.remove(uploaded.reference).catch(() => undefined);
     throw error;
   }
 };
-export const deleteBanner = async (id: string) => {
+export const deleteBanner = async (
+  id: string,
+  dependencies: {
+    createStorage?: typeof createSupabaseStorage;
+  } = {},
+) => {
   await authorize();
+  const storage = (dependencies.createStorage ?? createSupabaseStorage)();
   const deleted = await repo.deleteBanner(z.uuid().parse(id));
-  await createSupabaseStorage()
+  await storage
     .remove({ bucket: "publicMedia", path: deleted.imageStorageKey })
     .catch(() => undefined);
 };

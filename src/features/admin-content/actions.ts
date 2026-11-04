@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import * as service from "@/services/admin-content-service";
+import { getBannerActionErrorCode } from "./banner-action-error";
 const raw = (fd: FormData) => Object.fromEntries(fd.entries());
 const done = () => {
   revalidatePath("/", "layout");
@@ -24,20 +25,32 @@ export async function deleteFeaturedAction(fd: FormData) {
   done();
 }
 export async function saveBannerAction(fd: FormData) {
-  await service.saveBanner(
-    String(fd.get("id") || "") || undefined,
-    {
-      ...raw(fd),
-      isActive: fd.get("isActive") === "on",
-      startAt: fd.get("startAt") || undefined,
-      endAt: fd.get("endAt") || undefined,
-    },
-    fd.get("image") instanceof File ? (fd.get("image") as File) : undefined,
-  );
+  try {
+    await service.saveBanner(
+      String(fd.get("id") || "") || undefined,
+      {
+        ...raw(fd),
+        isActive: fd.get("isActive") === "on",
+        startAt: fd.get("startAt") || undefined,
+        endAt: fd.get("endAt") || undefined,
+      },
+      fd.get("image") instanceof File ? (fd.get("image") as File) : undefined,
+    );
+  } catch (error) {
+    const code = getBannerActionErrorCode(error);
+    if (code) redirect(`/admin/banners?error=${code}`);
+    throw error;
+  }
   done();
 }
 export async function deleteBannerAction(fd: FormData) {
-  await service.deleteBanner(String(fd.get("id")));
+  try {
+    await service.deleteBanner(String(fd.get("id")));
+  } catch (error) {
+    const code = getBannerActionErrorCode(error);
+    if (code) redirect(`/admin/banners?error=${code}`);
+    throw error;
+  }
   done();
 }
 export async function updateMerchantAction(id: string, fd: FormData) {

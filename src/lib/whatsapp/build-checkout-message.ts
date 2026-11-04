@@ -2,6 +2,7 @@ import "server-only";
 
 import { formatRupiah } from "@/lib/format/currency";
 import type { ValidatedCheckoutBuyer } from "@/features/checkout/checkout-schema";
+import { BRAND_NAME } from "@/constants/branding";
 
 export type CheckoutMessageItem = {
   name: string;
@@ -26,7 +27,7 @@ export const buildCheckoutMessage = ({
     buyer.fulfillmentMethod === "DIANTAR" ? "Diantar" : "Ambil sendiri";
   const lines = [
     `Halo ${merchantName}, saya ingin menanyakan pesanan`,
-    "dari Sungairujing Marketplace.",
+    `dari ${BRAND_NAME}.`,
     "",
     ...items.map(
       (item) =>

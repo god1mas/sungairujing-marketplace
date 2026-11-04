@@ -4,6 +4,7 @@ import { cache } from "react";
 import { ProductDetailView } from "@/components/product-detail/product-detail-view";
 import { ProductViewTracker } from "@/components/analytics/product-view-tracker";
 import { getPublicProductDetail } from "@/services/public-product-detail-service";
+import { BRAND_NAME } from "@/constants/branding";
 
 type ProductDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -20,7 +21,7 @@ export async function generateMetadata({
   if (!product) {
     return {
       title: "Produk Tidak Ditemukan",
-      description: "Produk tidak tersedia di Sungairujing Marketplace.",
+      description: `Produk tidak tersedia di ${BRAND_NAME}.`,
       robots: { index: false, follow: false },
     };
   }

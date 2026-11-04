@@ -15,7 +15,7 @@ const db = vi.hoisted(() => ({
   product: { count: vi.fn() },
   category: { count: vi.fn(), update: vi.fn(), delete: vi.fn() },
   featuredMerchant: { count: vi.fn(), create: vi.fn(), findMany: vi.fn() },
-  banner: { findMany: vi.fn() },
+  banner: { findMany: vi.fn(), upsert: vi.fn() },
 }));
 vi.mock("@/lib/db/prisma", () => ({ prisma: db }));
 import {
@@ -23,6 +23,7 @@ import {
   findPublicContent,
   permanentlyDeleteMerchant,
   removeCategory,
+  saveBanner,
 } from "./admin-content-repository";
 describe("admin content repository", () => {
   beforeEach(() => {
@@ -67,6 +68,38 @@ describe("admin content repository", () => {
         take: 5,
       }),
     );
+  });
+
+  it("maps the banner actor to createdByUserId without persisting a service-only field", async () => {
+    const banner = {
+      id: "banner-id",
+      title: "Banner lokal",
+      description: "Deskripsi",
+      imageStorageKey: "banners/banner-id/image.webp",
+      isActive: true,
+      actorUserId: "admin-id",
+    };
+
+    await saveBanner(banner);
+
+    expect(db.banner.upsert).toHaveBeenCalledWith({
+      where: { id: banner.id },
+      create: {
+        id: banner.id,
+        title: banner.title,
+        description: banner.description,
+        imageStorageKey: banner.imageStorageKey,
+        isActive: true,
+        createdByUserId: banner.actorUserId,
+      },
+      update: {
+        id: banner.id,
+        title: banner.title,
+        description: banner.description,
+        imageStorageKey: banner.imageStorageKey,
+        isActive: true,
+      },
+    });
   });
 
   it("records an audit snapshot and leaves report snapshots outside deletion", async () => {

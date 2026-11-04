@@ -5,18 +5,32 @@ import { getPopularProducts } from "@/services/analytics-service";
 import { ProductCard } from "@/components/catalog/product-card";
 import { getPublicHomepageContent } from "@/services/admin-content-service";
 import Image from "next/image";
+import {
+  BRAND_LOGO_HEIGHT,
+  BRAND_LOGO_PATH,
+  BRAND_LOGO_WIDTH,
+  BRAND_NAME,
+} from "@/constants/branding";
 
 export const metadata: Metadata = {
-  title: "Marketplace Produk Lokal Sungairujing",
+  title: BRAND_NAME,
   description:
     "Temukan produk UMKM Desa Sungairujing dan terhubung langsung dengan merchant lokal.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "id_ID",
-    title: "Sungairujing Marketplace",
+    title: BRAND_NAME,
     description:
       "Temukan produk UMKM Desa Sungairujing dan terhubung langsung dengan merchant lokal.",
+    images: [
+      {
+        url: BRAND_LOGO_PATH,
+        width: BRAND_LOGO_WIDTH,
+        height: BRAND_LOGO_HEIGHT,
+        alt: `Logo ${BRAND_NAME}`,
+      },
+    ],
   },
 };
 
@@ -191,8 +205,8 @@ export default async function Home() {
               Mendekatkan produk lokal dengan masyarakat
             </h2>
             <p className="mt-4 text-base leading-7 text-neutral-700">
-              Sungairujing Marketplace membantu masyarakat menemukan produk UMKM
-              Desa Sungairujing. Informasi produk tersedia dalam satu tempat,
+              {BRAND_NAME} membantu masyarakat menemukan produk UMKM Desa
+              Sungairujing. Informasi produk tersedia dalam satu tempat,
               sementara komunikasi dan kesepakatan dilakukan langsung dengan
               merchant.
             </p>

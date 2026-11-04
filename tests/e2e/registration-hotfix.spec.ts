@@ -17,9 +17,7 @@ test("registration page loads and invokes its Server Action", async ({
   await page.getByLabel("Password", { exact: true }).fill("rahasia8");
   await page.getByLabel("Alamat merchant").fill("Desa Sungairujing");
   await page
-    .getByLabel(
-      "Saya menyetujui syarat dan ketentuan Sungairujing Marketplace.",
-    )
+    .getByLabel("Saya menyetujui syarat dan ketentuan UMKM DESA SUNGAIRUJING.")
     .check();
   await page.getByRole("button", { name: "Daftar sebagai merchant" }).click();
 
