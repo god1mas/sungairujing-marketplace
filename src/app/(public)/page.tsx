@@ -130,27 +130,32 @@ export default async function Home() {
             {content.banners.map((banner) => (
               <article
                 key={banner.id}
-                className="overflow-hidden rounded-lg border bg-white sm:grid sm:grid-cols-2"
+                className="min-w-0 overflow-hidden rounded-lg border bg-white lg:grid lg:grid-cols-2"
               >
-                <Image
-                  src={banner.imageUrl}
-                  alt={banner.title}
-                  width={960}
-                  height={480}
-                  className="h-full w-full object-cover"
-                  unoptimized
-                />
-                <div className="p-6">
-                  <h2 className="text-2xl font-bold">{banner.title}</h2>
+                <div className="flex min-w-0 items-center justify-center overflow-hidden bg-neutral-100">
+                  <Image
+                    src={banner.imageUrl}
+                    alt={banner.title}
+                    width={960}
+                    height={480}
+                    sizes="(min-width: 1024px) 50vw, (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2rem)"
+                    className="block h-auto max-h-[32rem] w-full max-w-full object-contain lg:max-h-[28rem]"
+                    unoptimized
+                  />
+                </div>
+                <div className="min-w-0 p-5 sm:p-6 lg:flex lg:flex-col lg:justify-center lg:p-8">
+                  <h2 className="text-xl font-bold break-words sm:text-2xl">
+                    {banner.title}
+                  </h2>
                   {banner.description ? (
-                    <p className="mt-2 text-neutral-600">
+                    <p className="mt-2 break-words text-neutral-600">
                       {banner.description}
                     </p>
                   ) : null}
                   {banner.targetUrl ? (
                     <a
                       href={banner.targetUrl}
-                      className="mt-4 inline-flex min-h-11 items-center rounded-md bg-brand-700 px-4 font-semibold text-white"
+                      className="mt-4 inline-flex min-h-11 max-w-full items-center justify-center rounded-md bg-brand-700 px-4 text-center font-semibold break-words text-white lg:self-start"
                     >
                       {banner.ctaText || "Lihat selengkapnya"}
                     </a>

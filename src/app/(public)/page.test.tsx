@@ -9,7 +9,16 @@ vi.mock("@/services/analytics-service", () => ({
 }));
 vi.mock("@/services/admin-content-service", () => ({
   getPublicHomepageContent: vi.fn(async () => ({
-    banners: [],
+    banners: [
+      {
+        id: "banner-1",
+        title: "Promo Produk Lokal",
+        description: "Temukan produk unggulan dari UMKM Desa Sungairujing.",
+        imageUrl: "https://storage.example.test/banner.webp",
+        targetUrl: "/products",
+        ctaText: "Lihat produk",
+      },
+    ],
     featured: [],
   })),
 }));
@@ -49,6 +58,27 @@ describe("public homepage shell", () => {
     expect(screen.getByRole("button", { name: "Cari" })).toHaveAttribute(
       "type",
       "submit",
+    );
+  });
+
+  it("renders a responsive, uncropped banner with a working CTA", async () => {
+    render(await Home());
+
+    const image = screen.getByRole("img", { name: "Promo Produk Lokal" });
+    const card = image.closest("article");
+
+    expect(card).toHaveClass("lg:grid", "lg:grid-cols-2");
+    expect(card).not.toHaveClass("sm:grid", "sm:grid-cols-2");
+    expect(image).toHaveClass(
+      "h-auto",
+      "w-full",
+      "max-w-full",
+      "max-h-[32rem]",
+      "object-contain",
+    );
+    expect(screen.getByRole("link", { name: "Lihat produk" })).toHaveAttribute(
+      "href",
+      "/products",
     );
   });
 
