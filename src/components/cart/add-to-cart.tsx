@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useCartStore } from "@/features/cart/cart-store";
 
 export function AddToCart({
@@ -27,9 +28,9 @@ export function AddToCart({
           aria-label="Kurangi quantity"
           disabled={disabled || quantity <= 1}
           onClick={() => update(quantity - 1)}
-          className="size-11 rounded-md border border-neutral-300 bg-white font-bold disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex size-11 items-center justify-center rounded-lg border border-neutral-300 bg-white font-bold transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          −
+          <Minus aria-hidden="true" className="size-4" />
         </button>
         <output
           aria-label="Quantity produk"
@@ -42,9 +43,9 @@ export function AddToCart({
           aria-label="Tambah quantity"
           disabled={disabled}
           onClick={() => update(quantity + 1)}
-          className="size-11 rounded-md border border-neutral-300 bg-white font-bold disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex size-11 items-center justify-center rounded-lg border border-neutral-300 bg-white font-bold transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          +
+          <Plus aria-hidden="true" className="size-4" />
         </button>
       </div>
       <button
@@ -54,8 +55,9 @@ export function AddToCart({
           addItem({ productId, merchantId, quantity });
           setMessage("Produk ditambahkan ke cart.");
         }}
-        className="mt-4 min-h-11 w-full rounded-md bg-brand-600 px-5 font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-neutral-400 sm:w-auto"
+        className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 disabled:cursor-not-allowed disabled:bg-neutral-400 sm:w-auto"
       >
+        <ShoppingCart aria-hidden="true" className="size-5" />
         {disabled ? "Produk Habis" : "Tambah ke Cart"}
       </button>
       <p aria-live="polite" className="mt-2 text-sm text-success-text">

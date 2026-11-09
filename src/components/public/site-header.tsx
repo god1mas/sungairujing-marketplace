@@ -1,9 +1,17 @@
 import Link from "next/link";
+import {
+  LogIn,
+  Menu,
+  PackageSearch,
+  Search,
+  ShoppingBasket,
+  Store,
+} from "lucide-react";
 import { BrandLogo } from "@/components/branding/brand-logo";
 
 const navigation = [
-  { href: "/products", label: "Produk" },
-  { href: "/merchants", label: "Merchant" },
+  { href: "/products", label: "Produk", icon: PackageSearch },
+  { href: "/merchants", label: "Merchant", icon: Store },
 ] as const;
 
 export function SiteHeader({
@@ -14,7 +22,12 @@ export function SiteHeader({
   accountLabel: string;
 }) {
   return (
-    <header className="border-b border-neutral-200 bg-white">
+    <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white shadow-sm">
+      <div aria-hidden="true" className="flex h-1">
+        <span className="w-3/5 bg-brand-600" />
+        <span className="w-1/5 bg-accent-yellow" />
+        <span className="w-1/5 bg-accent-orange" />
+      </div>
       <div className="mx-auto flex min-h-20 max-w-(--container-app) items-center gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
         <Link
           href="/"
@@ -36,21 +49,24 @@ export function SiteHeader({
             <Link
               key={item.href}
               href={item.href}
-              className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100 hover:text-brand-700"
+              className="inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-semibold text-neutral-700 hover:bg-brand-50 hover:text-brand-700"
             >
+              <item.icon aria-hidden="true" className="size-4" />
               {item.label}
             </Link>
           ))}
           <Link
             href="/cart"
-            className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100 hover:text-brand-700"
+            className="inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-semibold text-neutral-700 hover:bg-brand-50 hover:text-brand-700"
           >
+            <ShoppingBasket aria-hidden="true" className="size-4" />
             Keranjang
           </Link>
           <Link
             href={accountHref}
-            className="ml-2 inline-flex min-h-11 items-center rounded-md bg-brand-600 px-4 text-sm font-semibold text-white hover:bg-brand-700"
+            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-md bg-brand-600 px-4 text-sm font-semibold text-white shadow-sm hover:bg-brand-700"
           >
+            <LogIn aria-hidden="true" className="size-4" />
             {accountLabel}
           </Link>
         </nav>
@@ -60,45 +76,19 @@ export function SiteHeader({
           aria-label="Cari"
           className="inline-flex size-11 items-center justify-center rounded-md text-brand-700 hover:bg-brand-50 md:hidden"
         >
-          <svg
-            aria-hidden="true"
-            className="size-5"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              cx="11"
-              cy="11"
-              r="7"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-            <path d="m16 16 4 4" stroke="currentColor" strokeWidth="2" />
-          </svg>
+          <Search aria-hidden="true" className="size-5" />
         </Link>
         <Link
           href="/cart"
           aria-label="Keranjang"
           className="inline-flex size-11 items-center justify-center rounded-md text-neutral-700 hover:bg-neutral-100 md:hidden"
         >
-          <svg
-            aria-hidden="true"
-            className="size-5"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M3 4h2l2.2 10h9.6l2-7H6M9 19h.01M17 19h.01"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-            />
-          </svg>
+          <ShoppingBasket aria-hidden="true" className="size-5" />
         </Link>
 
         <details className="group relative md:hidden">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center rounded-md border border-neutral-300 px-3 text-sm font-semibold text-neutral-800 hover:bg-neutral-100">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-md border border-neutral-300 px-3 text-sm font-semibold text-neutral-800 hover:border-brand-200 hover:bg-brand-50">
+            <Menu aria-hidden="true" className="size-4" />
             Menu
           </summary>
           <nav
@@ -111,6 +101,7 @@ export function SiteHeader({
                 href={item.href}
                 className="flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
               >
+                <item.icon aria-hidden="true" className="mr-2 size-4" />
                 {item.label}
               </Link>
             ))}
@@ -118,12 +109,14 @@ export function SiteHeader({
               href="/cart"
               className="flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
             >
+              <ShoppingBasket aria-hidden="true" className="mr-2 size-4" />
               Keranjang
             </Link>
             <Link
               href={accountHref}
               className="mt-1 flex min-h-11 items-center rounded-md bg-brand-600 px-3 text-sm font-semibold text-white hover:bg-brand-700"
             >
+              <LogIn aria-hidden="true" className="mr-2 size-4" />
               {accountLabel}
             </Link>
           </nav>

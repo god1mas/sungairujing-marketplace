@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
+import { AlertTriangle, Store } from "lucide-react";
 import { MerchantDetailView } from "@/components/merchant/merchant-detail-view";
+import { PublicPageHeader } from "@/components/public/public-page-header";
+import { PublicStatePanel } from "@/components/public/public-state-panel";
 import { getPublicMerchantDetail } from "@/services/public-merchant-service";
 import { BRAND_NAME } from "@/constants/branding";
 import { createMerchantQr } from "@/services/merchant-qr-service";
@@ -56,15 +59,20 @@ export default async function MerchantPage({ params }: MerchantPageProps) {
   if (result.unavailable) {
     return (
       <main id="main-content" className="bg-neutral-50">
-        <div className="mx-auto max-w-(--container-app) px-4 py-16 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold">Profil Merchant</h1>
-          <div
+        <PublicPageHeader
+          eyebrow="UMKM Desa Sungairujing"
+          title="Profil Merchant"
+          description="Kenali merchant lokal dan produk yang mereka tawarkan."
+          icon={Store}
+        />
+        <div className="mx-auto max-w-(--container-app) px-4 py-10 sm:px-6 lg:px-8">
+          <PublicStatePanel
             role="alert"
-            className="mt-6 max-w-2xl rounded-lg border border-error-border bg-error-bg p-5 text-error-text"
-          >
-            Profil merchant belum dapat dimuat. Silakan coba lagi beberapa saat
-            lagi.
-          </div>
+            tone="error"
+            icon={AlertTriangle}
+            title="Profil merchant belum dapat dimuat"
+            description="Silakan coba lagi beberapa saat lagi."
+          />
         </div>
       </main>
     );

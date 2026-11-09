@@ -43,6 +43,10 @@
   --color-info-text: #1d4ed8;
   --color-info-border: #bfdbfe;
 
+  --color-cream-50: #fff8e8;
+  --color-accent-yellow: #f5c84c;
+  --color-accent-orange: #ffb86b;
+
   --font-sans:
     Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 

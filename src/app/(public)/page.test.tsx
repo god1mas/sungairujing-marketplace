@@ -2,7 +2,12 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/services/public-catalog-service", () => ({
-  getPublicCatalogFilterOptions: vi.fn(async () => ({ categories: [] })),
+  getPublicCatalogFilterOptions: vi.fn(async () => ({
+    categories: [
+      { name: "Makanan", slug: "makanan" },
+      { name: "Kerajinan", slug: "kerajinan" },
+    ],
+  })),
 }));
 vi.mock("@/services/analytics-service", () => ({
   getPopularProducts: vi.fn(async () => []),
@@ -19,7 +24,16 @@ vi.mock("@/services/admin-content-service", () => ({
         ctaText: "Lihat produk",
       },
     ],
-    featured: [],
+    featured: [
+      {
+        id: "merchant-1",
+        name: "Dapur Sungairujing",
+        slug: "dapur-sungairujing",
+        description: "Produk rumahan dari Desa Sungairujing.",
+        address: "Desa Sungairujing",
+        operationalStatus: "BUKA",
+      },
+    ],
   })),
 }));
 
@@ -59,6 +73,23 @@ describe("public homepage shell", () => {
       "type",
       "submit",
     );
+  });
+
+  it("keeps category and featured merchant discovery links functional", async () => {
+    render(await Home());
+
+    expect(screen.getByRole("link", { name: /Makanan/ })).toHaveAttribute(
+      "href",
+      "/products?category=makanan",
+    );
+    expect(
+      screen.getByRole("link", { name: /Dapur Sungairujing/ }),
+    ).toHaveAttribute("href", "/merchant/dapur-sungairujing");
+    expect(
+      screen.getByRole("complementary", {
+        name: "Cara menggunakan marketplace",
+      }),
+    ).toBeInTheDocument();
   });
 
   it("renders a responsive, uncropped banner with a working CTA", async () => {

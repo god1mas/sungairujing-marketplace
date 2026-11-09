@@ -19,7 +19,8 @@ describe("MerchantCard", () => {
       />,
     );
 
-    expect(screen.getByText("✓ Terverifikasi")).toBeInTheDocument();
+    expect(screen.getByText("Terverifikasi")).toBeInTheDocument();
+    expect(screen.getByText("Desa Sungairujing")).toBeInTheDocument();
     expect(screen.getByText("Buka")).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Lihat merchant" }),

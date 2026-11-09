@@ -1,7 +1,17 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import {
+  AlertTriangle,
+  PackageSearch,
+  SearchX,
+  ShoppingBag,
+} from "lucide-react";
 import { CatalogFilters } from "@/components/catalog/catalog-filters";
 import { CatalogPagination } from "@/components/catalog/catalog-pagination";
 import { ProductCard } from "@/components/catalog/product-card";
+import { PublicPageHeader } from "@/components/public/public-page-header";
+import { PublicStatePanel } from "@/components/public/public-state-panel";
+import { SectionHeading } from "@/components/public/section-heading";
 import {
   parseCatalogQuery,
   type CatalogSearchParams,
@@ -32,16 +42,19 @@ export default async function ProductsPage({
   if (!result) {
     return (
       <main id="main-content" className="bg-neutral-50">
-        <div className="mx-auto max-w-(--container-app) px-4 py-16 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-neutral-900">
-            Katalog Produk
-          </h1>
-          <div
-            role="alert"
-            className="mt-6 max-w-2xl rounded-lg border border-error-border bg-error-bg p-5 text-error-text"
-          >
-            Katalog belum dapat dimuat. Silakan coba lagi beberapa saat lagi.
-          </div>
+        <PublicPageHeader
+          eyebrow="Produk lokal Sungairujing"
+          title="Katalog Produk"
+          description="Temukan produk UMKM lokal dan hubungi merchant secara langsung."
+          icon={ShoppingBag}
+        />
+        <div className="mx-auto max-w-(--container-app) px-4 py-10 sm:px-6 lg:px-8">
+          <PublicStatePanel
+            tone="error"
+            icon={AlertTriangle}
+            title="Katalog belum dapat dimuat"
+            description="Silakan coba lagi beberapa saat lagi."
+          />
         </div>
       </main>
     );
@@ -51,32 +64,25 @@ export default async function ProductsPage({
 
   return (
     <main id="main-content" className="bg-neutral-50">
-      <div className="mx-auto max-w-(--container-app) px-4 py-10 sm:px-6 lg:px-8">
-        <header className="max-w-3xl">
-          <p className="text-sm font-semibold text-brand-700">
-            Produk lokal Sungairujing
-          </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-            Katalog Produk
-          </h1>
-          <p className="mt-3 text-neutral-600">
-            Temukan produk UMKM lokal dan hubungi merchant secara langsung.
-          </p>
-        </header>
-
-        <div className="mt-8">
+      <PublicPageHeader
+        eyebrow="Produk lokal Sungairujing"
+        title="Katalog Produk"
+        description="Temukan produk UMKM lokal dan hubungi merchant secara langsung."
+        icon={ShoppingBag}
+      />
+      <div className="mx-auto max-w-(--container-app) px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <div>
           <CatalogFilters query={query} options={options} />
         </div>
 
-        <section aria-labelledby="catalog-results" className="mt-8">
-          <div className="flex items-end justify-between gap-4">
-            <h2 id="catalog-results" className="text-xl font-bold">
-              Hasil produk
-            </h2>
-            <p className="text-sm text-neutral-600">
-              {catalog.total} produk ditemukan
-            </p>
-          </div>
+        <section aria-labelledby="catalog-results" className="mt-10">
+          <SectionHeading
+            id="catalog-results"
+            eyebrow={`${catalog.total} produk ditemukan`}
+            title="Hasil produk"
+            description="Pilih produk yang sesuai dan lihat informasi lengkap dari merchant lokal."
+            icon={PackageSearch}
+          />
 
           {catalog.products.length > 0 ? (
             <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
@@ -85,14 +91,20 @@ export default async function ProductsPage({
               ))}
             </div>
           ) : (
-            <div className="mt-5 rounded-lg border border-neutral-200 bg-white px-6 py-12 text-center">
-              <h3 className="text-lg font-semibold text-neutral-900">
-                Produk tidak ditemukan
-              </h3>
-              <p className="mt-2 text-neutral-600">
-                Coba ubah kata kunci atau filter pencarian Anda.
-              </p>
-            </div>
+            <PublicStatePanel
+              className="mt-5"
+              icon={SearchX}
+              title="Produk tidak ditemukan"
+              description="Coba ubah kata kunci atau filter pencarian Anda."
+              action={
+                <Link
+                  href="/products"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg bg-brand-600 px-5 font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+                >
+                  Reset pencarian
+                </Link>
+              }
+            />
           )}
         </section>
 

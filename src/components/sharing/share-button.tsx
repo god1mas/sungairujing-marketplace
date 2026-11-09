@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Share2 } from "lucide-react";
 
 export function ShareButton({ title, path }: { title: string; path: string }) {
   const [feedback, setFeedback] = useState("");
@@ -24,8 +25,9 @@ export function ShareButton({ title, path }: { title: string; path: string }) {
       <button
         type="button"
         onClick={share}
-        className="inline-flex min-h-11 items-center rounded-md border border-neutral-300 bg-white px-5 font-semibold text-neutral-800 hover:bg-neutral-50"
+        className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-neutral-300 bg-white px-5 font-semibold text-neutral-800 transition-colors hover:border-orange-200 hover:bg-orange-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
       >
+        <Share2 aria-hidden="true" className="size-4" />
         Bagikan produk
       </button>
       <p

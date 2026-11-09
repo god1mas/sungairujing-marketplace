@@ -26,8 +26,9 @@ export function MerchantStatus({
   const presentation = statusPresentation[status];
   return (
     <span
-      className={`inline-flex rounded-sm border px-2.5 py-1 text-xs font-semibold ${presentation.className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${presentation.className}`}
     >
+      <span aria-hidden="true" className="size-1.5 rounded-full bg-current" />
       {presentation.label}
     </span>
   );

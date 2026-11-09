@@ -14,7 +14,7 @@ export function MerchantLogo({
 
   return (
     <div
-      className={`relative shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-brand-50 ${dimensions}`}
+      className={`relative shrink-0 overflow-hidden rounded-xl border border-brand-100 bg-cream-50 shadow-sm ${dimensions}`}
     >
       {merchant.logo ? (
         <Image

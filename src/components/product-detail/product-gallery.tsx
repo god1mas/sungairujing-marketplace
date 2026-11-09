@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ImageOff } from "lucide-react";
 import { useState } from "react";
 import type { PublicProductDetail } from "@/services/public-product-detail-service";
 
@@ -13,7 +14,7 @@ export function ProductGallery({
 
   return (
     <section aria-label={`Galeri foto ${name}`}>
-      <div className="relative aspect-square overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
+      <div className="relative aspect-square overflow-hidden rounded-xl border border-brand-100 bg-cream-50 shadow-sm">
         {mainImage ? (
           <Image
             src={mainImage.url}
@@ -24,8 +25,11 @@ export function ProductGallery({
             className="object-cover"
           />
         ) : (
-          <div className="flex h-full items-center justify-center px-6 text-center text-neutral-500">
-            Foto {name} belum tersedia
+          <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center text-neutral-500">
+            <span className="flex size-12 items-center justify-center rounded-xl bg-white text-brand-600 shadow-sm">
+              <ImageOff aria-hidden="true" className="size-6" />
+            </span>
+            <span>Foto {name} belum tersedia</span>
           </div>
         )}
       </div>
@@ -39,7 +43,7 @@ export function ProductGallery({
               onClick={() => setSelectedIndex(index)}
               aria-label={`Tampilkan gambar ${index + 1} dari ${name}`}
               aria-pressed={selectedIndex === index}
-              className={`relative aspect-square min-h-11 w-20 shrink-0 overflow-hidden rounded-md border bg-neutral-100 sm:w-24 ${
+              className={`relative aspect-square min-h-11 w-20 shrink-0 overflow-hidden rounded-lg border bg-neutral-100 transition sm:w-24 ${
                 selectedIndex === index
                   ? "border-brand-600 ring-2 ring-brand-200"
                   : "border-neutral-200"

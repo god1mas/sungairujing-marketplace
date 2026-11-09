@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
+import { AlertTriangle, PackageSearch } from "lucide-react";
 import { ProductDetailView } from "@/components/product-detail/product-detail-view";
+import { PublicPageHeader } from "@/components/public/public-page-header";
+import { PublicStatePanel } from "@/components/public/public-state-panel";
 import { ProductViewTracker } from "@/components/analytics/product-view-tracker";
 import { getPublicProductDetail } from "@/services/public-product-detail-service";
 import { BRAND_NAME } from "@/constants/branding";
@@ -56,15 +59,20 @@ export default async function ProductDetailPage({
   if (result.unavailable) {
     return (
       <main id="main-content" className="bg-neutral-50">
-        <div className="mx-auto max-w-(--container-app) px-4 py-16 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-neutral-900">Detail Produk</h1>
-          <div
+        <PublicPageHeader
+          eyebrow="Produk lokal Sungairujing"
+          title="Detail Produk"
+          description="Lihat informasi lengkap produk dan merchant lokal."
+          icon={PackageSearch}
+        />
+        <div className="mx-auto max-w-(--container-app) px-4 py-10 sm:px-6 lg:px-8">
+          <PublicStatePanel
             role="alert"
-            className="mt-6 max-w-2xl rounded-lg border border-error-border bg-error-bg p-5 text-error-text"
-          >
-            Detail produk belum dapat dimuat. Silakan coba lagi beberapa saat
-            lagi.
-          </div>
+            tone="error"
+            icon={AlertTriangle}
+            title="Detail produk belum dapat dimuat"
+            description="Silakan coba lagi beberapa saat lagi."
+          />
         </div>
       </main>
     );
