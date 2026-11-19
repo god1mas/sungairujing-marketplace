@@ -10,6 +10,7 @@ import {
   CATALOG_PAGE_SIZE,
   type CatalogQuery,
 } from "@/features/catalog/catalog-query";
+import { logPublicCatalogFailure } from "./public-catalog-diagnostic";
 
 export type PublicProductCard = {
   id: string;
@@ -50,35 +51,53 @@ export const getPublicCatalog = async (
     resolveImageUrl?: ImageUrlResolver;
   } = {},
 ): Promise<PublicCatalog> => {
-  const result = await (dependencies.findCatalog ?? findPublicCatalog)({
-    query,
-    pageSize: CATALOG_PAGE_SIZE,
-  });
-  const imageUrl = dependencies.resolveImageUrl ?? resolvePublicImageUrl;
+  let result;
+  try {
+    result = await (dependencies.findCatalog ?? findPublicCatalog)({
+      query,
+      pageSize: CATALOG_PAGE_SIZE,
+    });
+  } catch (error) {
+    logPublicCatalogFailure("product-catalog-query", error);
+    throw error;
+  }
 
-  return {
-    total: result.total,
-    totalPages: Math.ceil(result.total / CATALOG_PAGE_SIZE),
-    page: query.page,
-    products: result.products.map((product) => {
-      const cover = product.images[0];
-      const url = cover ? imageUrl(cover.storageKey) : null;
-      return {
-        id: product.id,
-        name: product.name,
-        slug: product.slug,
-        price: product.price.toFixed(2),
-        unit: product.unit,
-        availability: product.availabilityStatus,
-        merchant: product.merchant,
-        image: url
-          ? { url, alt: cover?.altText ?? `Foto ${product.name}` }
-          : null,
-      };
-    }),
-  };
+  try {
+    const imageUrl = dependencies.resolveImageUrl ?? resolvePublicImageUrl;
+    return {
+      total: result.total,
+      totalPages: Math.ceil(result.total / CATALOG_PAGE_SIZE),
+      page: query.page,
+      products: result.products.map((product) => {
+        const cover = product.images[0];
+        const url = cover ? imageUrl(cover.storageKey) : null;
+        return {
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          price: product.price.toFixed(2),
+          unit: product.unit,
+          availability: product.availabilityStatus,
+          merchant: product.merchant,
+          image: url
+            ? { url, alt: cover?.altText ?? `Foto ${product.name}` }
+            : null,
+        };
+      }),
+    };
+  } catch (error) {
+    logPublicCatalogFailure("catalog-result-processing", error);
+    throw error;
+  }
 };
 
 export const getPublicCatalogFilterOptions = async (
   findOptions: () => Promise<PublicCatalogFilterOptions> = findPublicCatalogFilterOptions,
-) => findOptions();
+) => {
+  try {
+    return await findOptions();
+  } catch (error) {
+    logPublicCatalogFailure("filter-options-query", error);
+    throw error;
+  }
+};
