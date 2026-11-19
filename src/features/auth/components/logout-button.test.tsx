@@ -13,4 +13,10 @@ describe("LogoutButton", () => {
 
     expect(signOut).toHaveBeenCalledWith({ callbackUrl: "/" });
   });
+
+  it("redirects admin logout to the dedicated login page", () => {
+    render(<LogoutButton callbackUrl="/admin/login" />);
+    fireEvent.click(screen.getByRole("button", { name: "Logout" }));
+    expect(signOut).toHaveBeenCalledWith({ callbackUrl: "/admin/login" });
+  });
 });

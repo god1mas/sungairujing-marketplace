@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  createAdminLoginRateLimitKey,
   createInMemoryLoginRateLimiter,
   createLoginRateLimitKey,
   createProductionLoginRateLimiter,
@@ -31,6 +32,18 @@ describe("login rate limiter", () => {
     expect(key).toMatch(/^auth:login:[a-f0-9]{64}$/);
     expect(key).not.toContain("6281234567890");
     expect(key).not.toContain("203.0.113.10");
+  });
+
+  it("uses a distinct, non-plaintext admin key namespace", () => {
+    const input = {
+      identifier: "admin_sungairujing",
+      ipAddress: "203.0.113.10",
+    };
+    const adminKey = createAdminLoginRateLimitKey(input);
+    expect(adminKey).toMatch(/^auth:admin-login:[a-f0-9]{64}$/);
+    expect(adminKey).not.toBe(createLoginRateLimitKey(input));
+    expect(adminKey).not.toContain(input.identifier);
+    expect(adminKey).not.toContain(input.ipAddress);
   });
 
   it("fails safe when production Upstash configuration is missing", () => {

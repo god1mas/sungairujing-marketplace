@@ -29,7 +29,7 @@ test("anonymous direct admin resource URL manipulation is rejected", async ({
   page,
 }) => {
   await page.goto("/admin/reports/10000000-0000-4000-8000-000000000001");
-  await expect(page).toHaveURL(/\/login$/);
+  await expect(page).toHaveURL(/\/admin\/login$/);
 });
 
 test("analytics mutation rejects a cross-origin request", async ({

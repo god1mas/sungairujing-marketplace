@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
+Post-baseline Admin Username Authentication Migration — **GATE 4C.3 AUTH RELEASE IN PROGRESS**. The reviewed additive Production migration (4C.1) and exact-ID username provisioning of the existing active Super Admin (4C.2) passed verification. Gate 4C.3 covers the focused release branch and safe Vercel Preview verification; Preview authentication needs isolated non-Production services. Merge to `main`, Production application deployment, and password rotation remain **NOT AUTHORIZED**.
 
 ## Sub-Phase Status
 
@@ -40,7 +40,7 @@ Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
 - Phase 10 — Super Admin Content Management — **COMPLETED**
 - Phase 11 — Notifications, QR, Share & PWA — **COMPLETED**
 - Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
-- Phase 13 and later — **NOT STARTED**
+- Phase 13 status in this historical section predates the deployed application; this auth-migration task does not reverify or change Production.
 
 ## Completed
 
@@ -202,10 +202,11 @@ Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
 - Privacy-safe public analytics burst limiting with hashed IP keys, Upstash production storage, local development storage, and documented fail-open analytics behavior
 - Expanded cross-tenant Product/evidence, suspended-state, Super Admin boundary, MIME spoofing, upload-boundary, XSS escaping, CSRF/origin, and direct-route manipulation tests
 - Post-Phase-12 Server Action runtime hotfix separating UI initial-state objects from all module-level `"use server"` action exports
+- Admin Username Authentication Migration Phase 3 local verification on isolated PostgreSQL 17, including live migrations, exact-ID provisioning, database-backed login, and browser authorization checks
 
 ## In Progress
 
-- No phase is currently in progress. Phase 12 is complete; Phase 13 has not started.
+- No local implementation work remains for Phase 3. Gate 4C.1 applied only `20261118000000_add_admin_username` to the verified Production project. Gate 4C.2 provisioned `admin_sungairujing` on the operator-selected existing active Super Admin row; its `User.id`, role, password hash, relationships, and other user data were verified unchanged, aside from the expected timestamp. Gate 4C.3 release/Preview verification is in progress. No Production authentication cutover or password rotation has occurred.
 
 ## Known Issues
 
@@ -218,6 +219,7 @@ Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
 - Real Supabase projects, buckets, and credentials are not configured in this repository; external network integration was not tested in Sub-Phase 3A.
 - Phase 11 authenticated database-backed notification and suspended-merchant QR browser lifecycles remain externally limited because local PostgreSQL/session fixtures were unavailable; authorization and URL behavior are covered deterministically.
 - Phase 12 authenticated PostgreSQL/Supabase-backed cross-tenant browser lifecycles remain externally limited because local database, session fixtures, and provider credentials are unavailable; the security decisions are covered deterministically at service/repository level.
+- Anonymous/merchant requests to `/admin` correctly redirect, but Next.js may log `UnauthenticatedError`/`ForbiddenError` from the page's independently rendered `getOverview()` while the layout guard redirects. No admin data is returned; this is non-blocking log noise, not a verified data exposure.
 
 ## Tests
 
@@ -365,15 +367,20 @@ Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
 - Post-Phase-12 registration hotfix: lint, typecheck, format check, build, and 312 Vitest tests across 90 files PASS
 - Post-Phase-12 registration Playwright smoke: PASS; `/register` loaded and server-side validation executed without the invalid Server Action export error
 - `npm audit --audit-level=high`: PASS after registration hotfix (0 vulnerabilities)
+- Admin username authentication migration: Prisma format, validate, and generate PASS; both migrations applied and `migrate status` PASS on isolated PostgreSQL 17. `admin_username` is nullable `VARCHAR(32)`, unique, SUPER_ADMIN-only, and the 16 application tables remain present.
+- Admin username authentication migration: lint, typecheck, format check, and production build PASS; 30 pages processed, including `/admin/login`.
+- Admin username authentication migration: disposable PostgreSQL integration test PASS for exact-ID provisioning, idempotence, preserved audit/membership relations, role-separated login, inactive accounts, rate limits, and session/role guards. Full Vitest suite PASS (105 files / 387 tests, 1 disposable-only test skipped without its explicit URL) with `--pool=forks --maxWorkers=1` on Windows.
+- Admin username authentication migration: focused local Playwright E2E PASS (4 tests) including authenticated admin and merchant browser login against the disposable database; prior anonymous smoke suite PASS (13 tests).
+- Admin username authentication migration: `npm audit` could not reach the npm registry endpoint in this environment; no dependency changes were made.
 
 ## Build Status
 
-PASS — Phase 12 remains completed; Merchant registration runtime hotfix verified
+Isolated release validation PASS at Gate 4B: lint, typecheck, format check, 392 unit tests, disposable PostgreSQL migration/integration, 34 E2E tests, and local build (30 pages). Gates 4C.1 and 4C.2 PASS; no Production application deployment. Gate 4C.3 is tracked separately until Preview and release verification are complete.
 
 ## Last Commit
 
-`7d1355b test: harden marketplace security and tenant isolation`
+`2ed4885 Merge pull request #1 from god1mas/fix/catalog-error-diagnostics` (baseline before this auth release)
 
 ## Next Action
 
-Await approval for the Merchant registration runtime hotfix Git checkpoint. Phase 13 remains not started.
+Review Gate 4C.3 release and Preview outcomes, including any blocked authentication checks. Do not rerun the completed Production migration or provisioning. Obtain separate operator approval before merging to `main`, deploying to Production, or rotating the admin password. See `docs/ADMIN-USERNAME-AUTH-MIGRATION.md`.

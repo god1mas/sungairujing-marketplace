@@ -183,6 +183,10 @@ Phase 14 — Final QA, Demo Data & Documentation
 
 ---
 
+# Approved post-baseline authentication migration
+
+Perubahan terarah memisahkan login merchant WhatsApp `/login` dari login Super Admin username `/admin/login`. Pengembangan lokal mencakup migrasi Prisma aditif nullable, provisioning berdasarkan `User.id` yang diverifikasi, dua provider Credentials dengan pembatasan role, tes keamanan/regresi, dan dokumentasi. Cutover Production adalah gate terpisah yang memerlukan persetujuan operator; lihat `docs/ADMIN-USERNAME-AUTH-MIGRATION.md`. Lulus build lokal tidak berarti migrasi atau login Production telah terverifikasi.
+
 # 7. Phase 0 — Repository & Application Foundation
 
 ## Goal

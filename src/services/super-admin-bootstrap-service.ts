@@ -16,6 +16,7 @@ type ExistingUser = {
 type CreateSuperAdminInput = {
   name: string;
   whatsappNumber: string;
+  adminUsername: string;
   passwordHash: string;
   globalRole: GlobalUserRole;
 };
@@ -86,6 +87,7 @@ export const bootstrapSuperAdmin = async (
   const user = await dependencies.createUser({
     name: "Super Admin Sungairujing",
     whatsappNumber,
+    adminUsername: "admin_sungairujing",
     passwordHash,
     globalRole: GlobalUserRole.SUPER_ADMIN,
   });

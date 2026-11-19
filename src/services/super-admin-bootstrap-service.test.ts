@@ -44,6 +44,7 @@ describe("bootstrapSuperAdmin", () => {
     expect(deps.createUser).toHaveBeenCalledWith({
       name: "Super Admin Sungairujing",
       whatsappNumber: "6281234567890",
+      adminUsername: "admin_sungairujing",
       passwordHash: "$argon2id$secure-hash",
       globalRole: GlobalUserRole.SUPER_ADMIN,
     });

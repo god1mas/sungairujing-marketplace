@@ -3,7 +3,7 @@
 import { useState, useTransition, type FormEvent } from "react";
 import Link from "next/link";
 import { getSession, signIn } from "next-auth/react";
-import { getPostLoginPath } from "@/lib/auth/redirect";
+import { useRouter } from "next/navigation";
 
 const GENERIC_LOGIN_ERROR = "Nomor WhatsApp atau password tidak sesuai.";
 
@@ -14,6 +14,7 @@ export const LoginForm = ({
   registered?: boolean;
   passwordChanged?: boolean;
 }) => {
+  const router = useRouter();
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -36,12 +37,12 @@ export const LoginForm = ({
         }
 
         const session = await getSession();
-        if (!session?.user.globalRole) {
+        if (session?.user.globalRole !== "USER") {
           setError("Sesi tidak dapat dibuat. Silakan coba lagi.");
           return;
         }
 
-        window.location.assign(getPostLoginPath(session.user.globalRole));
+        router.replace("/dashboard");
       } catch {
         setError("Login belum berhasil. Silakan coba lagi.");
       }

@@ -17,5 +17,5 @@ test("anonymous visitor cannot access the admin report queue", async ({
   page,
 }) => {
   await page.goto("/admin/reports");
-  await expect(page).toHaveURL(/\/login/);
+  await expect(page).toHaveURL(/\/admin\/login$/);
 });

@@ -16,6 +16,15 @@ describe("Auth.js session configuration", () => {
     });
   });
 
+  it("configures separate merchant and admin Credentials provider IDs", () => {
+    expect(authOptions.providers).toHaveLength(2);
+    expect(authOptions.providers[0].id).toBe("credentials");
+    expect(authOptions.providers[1]).toMatchObject({
+      type: "credentials",
+      options: { id: "admin-credentials" },
+    });
+  });
+
   it("exposes only the approved identity fields in the browser session", async () => {
     const sessionCallback = authOptions.callbacks?.session as (input: {
       session: Session;
