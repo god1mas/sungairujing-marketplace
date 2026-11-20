@@ -33,7 +33,7 @@ export function InstallAffordance() {
     setPromptEvent(null);
   };
   return (
-    <div className="fixed right-4 bottom-4 z-40 max-w-xs rounded-lg border border-neutral-200 bg-white p-3 shadow-lg">
+    <div className="mx-auto my-4 w-fit max-w-xs rounded-lg border border-neutral-200 bg-white p-3 shadow-lg sm:fixed sm:right-4 sm:bottom-4 sm:z-40 sm:m-0">
       <div className="flex items-center gap-2">
         <button
           type="button"
