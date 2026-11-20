@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Post-baseline Admin Username Authentication Migration — **GATE 4C.3 AUTH RELEASE IN PROGRESS**. The reviewed additive Production migration (4C.1) and exact-ID username provisioning of the existing active Super Admin (4C.2) passed verification. Gate 4C.3 covers the focused release branch and safe Vercel Preview verification; Preview authentication needs isolated non-Production services. Merge to `main`, Production application deployment, and password rotation remain **NOT AUTHORIZED**.
+Post-baseline Admin Username Authentication Migration — **PRODUCTION AUTHENTICATION VERIFIED; GIT RECONCILIATION PENDING**. The additive Production migration and exact-ID username provisioning passed. Deployment `dpl_D1CpvYqv5RbQGUyJHqyXFpC4pp3K` is live at `https://umkmdesasungairujing.web.id` from the verified release source snapshot `304a77760177fd1bd569a71d516ef8a4a81b06f9`. Operator-controlled Super Admin and Merchant authentication checks passed. Preview-specific tests were skipped by operator decision. Password rotation and reconciliation of `origin/main` remain pending; no new Production deployment is authorized by this status update.
 
 ## Sub-Phase Status
 
@@ -206,7 +206,7 @@ Post-baseline Admin Username Authentication Migration — **GATE 4C.3 AUTH RELEA
 
 ## In Progress
 
-- No local implementation work remains for Phase 3. Gate 4C.1 applied only `20261118000000_add_admin_username` to the verified Production project. Gate 4C.2 provisioned `admin_sungairujing` on the operator-selected existing active Super Admin row; its `User.id`, role, password hash, relationships, and other user data were verified unchanged, aside from the expected timestamp. Gate 4C.3 release/Preview verification is in progress. No Production authentication cutover or password rotation has occurred.
+- Gate 4C.1 applied only `20261118000000_add_admin_username` to the verified Production project, and Gate 4C.2 provisioned `admin_sungairujing` on the operator-selected existing active Super Admin row without changing its ID, role, password hash, or relationships. Gate 4C.3 released commit `304a77760177fd1bd569a71d516ef8a4a81b06f9`; Preview-specific testing was skipped by operator decision. The reviewed source snapshot is live as deployment `dpl_D1CpvYqv5RbQGUyJHqyXFpC4pp3K`. Operator-reported Phase 4D admin/merchant login, logout, legacy-login rejection, and cross-role protection checks passed. Phase 4E read-only recovery audit passed; Phase 4F documentation is updated locally, while Git `main` reconciliation and password rotation remain pending.
 
 ## Known Issues
 
@@ -220,6 +220,8 @@ Post-baseline Admin Username Authentication Migration — **GATE 4C.3 AUTH RELEA
 - Phase 11 authenticated database-backed notification and suspended-merchant QR browser lifecycles remain externally limited because local PostgreSQL/session fixtures were unavailable; authorization and URL behavior are covered deterministically.
 - Phase 12 authenticated PostgreSQL/Supabase-backed cross-tenant browser lifecycles remain externally limited because local database, session fixtures, and provider credentials are unavailable; the security decisions are covered deterministically at service/repository level.
 - Anonymous/merchant requests to `/admin` correctly redirect, but Next.js may log `UnauthenticatedError`/`ForbiddenError` from the page's independently rendered `getOverview()` while the layout guard redirects. No admin data is returned; this is non-blocking log noise, not a verified data exposure.
+- Production log review on 2026-11-20 (10:17–10:47 UTC, available 30-minute window) found six `error` entries, all `UnauthenticatedError`/`ForbiddenError` on protected `/admin` or `/dashboard` requests; no P1001, P2024, Prisma, Upstash, NextAuth, or HTTP 500 evidence in that window. This does not prove long-term database stability. Authentication diagnostic logging was verbose: 35 of 40 `info` records were stage events; disabling the temporary Production diagnostic flag requires separate authorization.
+- The staged CLI deployment's automatic Git metadata reports the older `34d24d0` SHA; the uploaded source files were independently matched against release commit `304a777` before promotion. Do not use that Git metadata alone as source provenance.
 
 ## Tests
 
@@ -375,12 +377,12 @@ Post-baseline Admin Username Authentication Migration — **GATE 4C.3 AUTH RELEA
 
 ## Build Status
 
-Isolated release validation PASS at Gate 4B: lint, typecheck, format check, 392 unit tests, disposable PostgreSQL migration/integration, 34 E2E tests, and local build (30 pages). Gates 4C.1 and 4C.2 PASS; no Production application deployment. Gate 4C.3 is tracked separately until Preview and release verification are complete.
+Isolated release validation PASS at Gate 4B: lint, typecheck, format check, 392 unit tests, disposable PostgreSQL migration/integration, 34 E2E tests, and local build (30 pages). Gates 4C.1 and 4C.2 PASS. The reviewed release snapshot is live and public smoke checks passed; operator-controlled Production authentication checks passed. Preview-specific tests were skipped by operator decision. This status update did not run another local test/build or create another deployment.
 
 ## Last Commit
 
-`2ed4885 Merge pull request #1 from god1mas/fix/catalog-error-diagnostics` (baseline before this auth release)
+Release branch `304a777 feat: separate super admin username authentication`; remote `main` remains `2ed4885` (verified 2026-11-20). The original `main` worktree remains at `34d24d0` with pre-existing uncommitted changes.
 
 ## Next Action
 
-Review Gate 4C.3 release and Preview outcomes, including any blocked authentication checks. Do not rerun the completed Production migration or provisioning. Obtain separate operator approval before merging to `main`, deploying to Production, or rotating the admin password. See `docs/ADMIN-USERNAME-AUTH-MIGRATION.md`.
+Review the Phase 4E–4F recovery and Git reconciliation plan in `docs/ADMIN-USERNAME-AUTH-MIGRATION.md`. Obtain separate approval and verify Vercel auto-deployment/domain-assignment safeguards before merging or pushing to `main`; preserve the original dirty worktree. Password rotation is pending and separately authorized. Do not rerun the completed Production migration or provisioning, restore the database, or redeploy automatically.
