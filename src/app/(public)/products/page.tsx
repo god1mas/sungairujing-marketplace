@@ -47,8 +47,9 @@ export default async function ProductsPage({
           title="Katalog Produk"
           description="Temukan produk UMKM lokal dan hubungi merchant secara langsung."
           icon={ShoppingBag}
+          compact
         />
-        <div className="mx-auto max-w-(--container-app) px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-(--container-app) px-4 py-6 sm:px-6 lg:px-8">
           <PublicStatePanel
             tone="error"
             icon={AlertTriangle}
@@ -69,13 +70,12 @@ export default async function ProductsPage({
         title="Katalog Produk"
         description="Temukan produk UMKM lokal dan hubungi merchant secara langsung."
         icon={ShoppingBag}
+        compact
       />
-      <div className="mx-auto max-w-(--container-app) px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-        <div>
-          <CatalogFilters query={query} options={options} />
-        </div>
+      <div className="mx-auto max-w-(--container-app) px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
+        <CatalogFilters query={query} options={options} />
 
-        <section aria-labelledby="catalog-results" className="mt-10">
+        <section aria-labelledby="catalog-results" className="mt-6 sm:mt-8">
           <SectionHeading
             id="catalog-results"
             eyebrow={`${catalog.total} produk ditemukan`}
@@ -85,7 +85,7 @@ export default async function ProductsPage({
           />
 
           {catalog.products.length > 0 ? (
-            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-5 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
               {catalog.products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
