@@ -122,6 +122,8 @@ Fitur utama:
 
 Memerlukan login.
 
+Entry `/admin` mengarahkan pengguna tanpa sesi ke `/admin/login`. Form khusus admin menerima username dan password, lalu menuju `/admin` hanya jika role `SUPER_ADMIN` masih valid di server. Form merchant `/login` tidak dapat mengautentikasi Super Admin.
+
 Tujuan utama:
 
 ```text
@@ -1343,6 +1345,7 @@ Merchant dashboard:
 Super Admin:
 
 ```text
+/admin/login (public authentication entry)
 /admin
 ├── /admin/merchants
 ├── /admin/merchants/{id}

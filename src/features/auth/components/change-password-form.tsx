@@ -7,19 +7,25 @@ import { initialChangePasswordActionState } from "@/features/auth/actions/change
 
 export const PasswordChangeSessionInvalidator = ({
   success,
+  callbackUrl = "/login?passwordChanged=1",
 }: {
   success: boolean;
+  callbackUrl?: string;
 }) => {
   useEffect(() => {
     if (success) {
-      void signOut({ callbackUrl: "/login?passwordChanged=1" });
+      void signOut({ callbackUrl });
     }
-  }, [success]);
+  }, [success, callbackUrl]);
 
   return null;
 };
 
-export const ChangePasswordForm = () => {
+export const ChangePasswordForm = ({
+  callbackUrl,
+}: {
+  callbackUrl?: string;
+}) => {
   const [state, formAction, pending] = useActionState(
     changePasswordAction,
     initialChangePasswordActionState,
@@ -29,7 +35,10 @@ export const ChangePasswordForm = () => {
 
   return (
     <form action={formAction} className="mt-6 space-y-5">
-      <PasswordChangeSessionInvalidator success={state.success} />
+      <PasswordChangeSessionInvalidator
+        success={state.success}
+        callbackUrl={callbackUrl}
+      />
       {state.message && !state.success ? (
         <div
           role="alert"

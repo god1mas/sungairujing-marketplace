@@ -127,6 +127,7 @@ model User {
   id              String         @id @default(uuid()) @db.Uuid
   name            String         @db.VarChar
   whatsappNumber  String         @unique @map("whatsapp_number") @db.VarChar
+  adminUsername   String?        @unique @map("admin_username") @db.VarChar(32)
   passwordHash    String         @map("password_hash") @db.Text
   globalRole      GlobalUserRole @map("global_role")
   termsAcceptedAt DateTime?      @map("terms_accepted_at") @db.Timestamptz

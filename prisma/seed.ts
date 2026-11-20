@@ -46,17 +46,30 @@ const main = async () => {
   const passwordHash = await hash(seedPassword);
 
   await prisma.$transaction(async (database) => {
+    const existingAdmin = await database.user.findUnique({
+      where: { whatsappNumber: adminWhatsapp },
+      select: { globalRole: true },
+    });
+    if (
+      existingAdmin &&
+      existingAdmin.globalRole !== GlobalUserRole.SUPER_ADMIN
+    ) {
+      throw new Error(
+        "Development seed menolak promosi akun non-Super Admin berdasarkan nomor WhatsApp.",
+      );
+    }
+
     const admin = await database.user.upsert({
       where: { whatsappNumber: adminWhatsapp },
       update: {
         name: "Super Admin Sungairujing",
         passwordHash,
-        globalRole: GlobalUserRole.SUPER_ADMIN,
         isActive: true,
       },
       create: {
         name: "Super Admin Sungairujing",
         whatsappNumber: adminWhatsapp,
+        adminUsername: "admin_sungairujing",
         passwordHash,
         globalRole: GlobalUserRole.SUPER_ADMIN,
       },

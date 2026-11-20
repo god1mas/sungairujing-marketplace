@@ -7,6 +7,6 @@ test("anonymous visitor cannot access the merchant dashboard", async ({
 
   await expect(page).toHaveURL(/\/login$/);
   await expect(
-    page.getByRole("heading", { level: 1, name: "Login" }),
+    page.getByRole("heading", { level: 1, name: "Login Merchant" }),
   ).toBeVisible();
 });

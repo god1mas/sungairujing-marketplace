@@ -1,7 +1,12 @@
 import { GlobalUserRole, Prisma } from "@prisma/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { hashPassword } from "@/lib/auth/password";
-import { authenticateCredentials, authenticateLogin } from "./auth-service";
+import {
+  authenticateAdminCredentials,
+  authenticateAdminLogin,
+  authenticateCredentials,
+  authenticateLogin,
+} from "./auth-service";
 
 const createAuthUser = async () => ({
   id: "00000000-0000-4000-8000-000000000001",
@@ -67,7 +72,7 @@ describe("authenticateCredentials", () => {
     ).resolves.toBeNull();
   });
 
-  it("returns a Super Admin role only when it comes from the database", async () => {
+  it("rejects a Super Admin even when WhatsApp and password are correct", async () => {
     const user = {
       ...(await createAuthUser()),
       globalRole: GlobalUserRole.SUPER_ADMIN,
@@ -78,7 +83,7 @@ describe("authenticateCredentials", () => {
         { whatsappNumber: user.whatsappNumber, password: "password-benar" },
         vi.fn().mockResolvedValue(user),
       ),
-    ).resolves.toMatchObject({ globalRole: GlobalUserRole.SUPER_ADMIN });
+    ).resolves.toBeNull();
   });
 
   it("distinguishes false and exception verification without changing failure behavior", async () => {
@@ -159,6 +164,115 @@ describe("authenticateCredentials", () => {
     const output = JSON.stringify(logger.mock.calls);
     expect(output).not.toContain(error.message);
     expect(output).not.toContain("P1001");
+  });
+});
+
+describe("admin username authentication", () => {
+  it("normalizes username, verifies password and returns the existing admin identity", async () => {
+    const admin = {
+      ...(await createAuthUser()),
+      globalRole: GlobalUserRole.SUPER_ADMIN,
+    };
+    const findUser = vi.fn().mockResolvedValue(admin);
+    const limiter = {
+      isAllowed: vi.fn().mockResolvedValue(true),
+      recordFailure: vi.fn(),
+    };
+
+    await expect(
+      authenticateAdminLogin(
+        { username: "  ADMIN_SUNGAIRUJING  ", password: "password-benar" },
+        { ipAddress: "203.0.113.10" },
+        { findUser, limiter },
+      ),
+    ).resolves.toMatchObject({
+      id: admin.id,
+      globalRole: GlobalUserRole.SUPER_ADMIN,
+    });
+    expect(findUser).toHaveBeenCalledWith("admin_sungairujing");
+    expect(limiter.recordFailure).not.toHaveBeenCalled();
+  });
+
+  it.each(["password-salah", "password-benar"])(
+    "rejects unknown username and incorrect password without exposing account state",
+    async (password) => {
+      const admin = {
+        ...(await createAuthUser()),
+        globalRole: GlobalUserRole.SUPER_ADMIN,
+      };
+      const limiter = {
+        isAllowed: vi.fn().mockResolvedValue(true),
+        recordFailure: vi.fn(),
+      };
+      await expect(
+        authenticateAdminLogin(
+          { username: "admin_sungairujing", password },
+          { ipAddress: "203.0.113.10" },
+          {
+            limiter,
+            findUser: vi
+              .fn()
+              .mockResolvedValue(password === "password-benar" ? null : admin),
+          },
+        ),
+      ).resolves.toBeNull();
+      expect(limiter.recordFailure).toHaveBeenCalledOnce();
+    },
+  );
+
+  it("rejects inactive admin and merchant accounts from the admin provider", async () => {
+    const user = await createAuthUser();
+    await expect(
+      authenticateAdminCredentials(
+        { username: "admin_sungairujing", password: "password-benar" },
+        vi.fn().mockResolvedValue(user),
+      ),
+    ).resolves.toBeNull();
+    await expect(
+      authenticateAdminCredentials(
+        { username: "admin_sungairujing", password: "password-benar" },
+        vi.fn().mockResolvedValue({
+          ...user,
+          globalRole: GlobalUserRole.SUPER_ADMIN,
+          isActive: false,
+        }),
+      ),
+    ).resolves.toBeNull();
+  });
+
+  it("rate-limits invalid input before database lookup", async () => {
+    const findUser = vi.fn();
+    const limiter = {
+      isAllowed: vi.fn().mockResolvedValue(true),
+      recordFailure: vi.fn(),
+    };
+    await expect(
+      authenticateAdminLogin(
+        { username: "invalid username", password: "x" },
+        { ipAddress: "203.0.113.10" },
+        { findUser, limiter },
+      ),
+    ).resolves.toBeNull();
+    expect(findUser).not.toHaveBeenCalled();
+    expect(limiter.recordFailure).toHaveBeenCalledOnce();
+  });
+
+  it("blocks an admin login before database lookup when the limit is reached", async () => {
+    const findUser = vi.fn();
+    await expect(
+      authenticateAdminLogin(
+        { username: "admin_sungairujing", password: "password-benar" },
+        { ipAddress: "203.0.113.10" },
+        {
+          findUser,
+          limiter: {
+            isAllowed: vi.fn().mockResolvedValue(false),
+            recordFailure: vi.fn(),
+          },
+        },
+      ),
+    ).resolves.toBeNull();
+    expect(findUser).not.toHaveBeenCalled();
   });
 });
 

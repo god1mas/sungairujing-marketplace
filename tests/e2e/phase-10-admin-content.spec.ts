@@ -7,5 +7,5 @@ for (const path of [
 ])
   test(`anonymous visitor cannot access ${path}`, async ({ page }) => {
     await page.goto(path);
-    await expect(page).toHaveURL(/\/login/);
+    await expect(page).toHaveURL(/\/admin\/login$/);
   });

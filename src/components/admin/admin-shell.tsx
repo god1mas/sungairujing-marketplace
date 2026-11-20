@@ -74,7 +74,7 @@ function AdminSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           Pengaturan akun
         </Link>
         <div className="mt-2 [&_button]:w-full [&_button]:border-white/20 [&_button]:bg-transparent [&_button]:text-white [&_button]:hover:bg-white/8">
-          <LogoutButton />
+          <LogoutButton callbackUrl="/admin/login" />
         </div>
       </div>
     </div>

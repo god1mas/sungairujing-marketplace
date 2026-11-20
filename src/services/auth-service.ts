@@ -1,15 +1,21 @@
-import type { GlobalUserRole } from "@prisma/client";
+import { GlobalUserRole } from "@prisma/client";
+import {
+  adminLoginSchema,
+  type AdminLoginInput,
+} from "@/features/auth/schemas/admin-login";
 import { loginSchema, type LoginInput } from "@/features/auth/schemas/login";
 import { logAuthDiagnostic } from "@/lib/auth/auth-diagnostic";
 import { normalizeWhatsAppNumber } from "@/lib/auth/whatsapp";
 import { verifyPasswordResult } from "@/lib/auth/password";
 import { logPrismaErrorDiagnostic } from "@/lib/db/prisma-error-diagnostic";
 import {
+  createAdminLoginRateLimitKey,
   createLoginRateLimitKey,
   getLoginRateLimiter,
 } from "@/lib/rate-limit/login";
 import type { LoginRateLimiter } from "@/lib/rate-limit/types";
 import {
+  findAuthUserByAdminUsername,
   findAuthUserByWhatsapp,
   type AuthUserRecord,
 } from "@/repositories/auth-user-repository";
@@ -32,6 +38,10 @@ type LoginContext = {
 
 type AuthUserLookup = (
   whatsappNumber: string,
+) => Promise<AuthUserRecord | null>;
+
+type AdminUserLookup = (
+  adminUsername: string,
 ) => Promise<AuthUserRecord | null>;
 
 export const authenticateCredentials = async (
@@ -69,6 +79,10 @@ export const authenticateCredentials = async (
     return null;
   }
 
+  if (user.globalRole !== GlobalUserRole.USER) {
+    return null;
+  }
+
   logAuthDiagnostic("user-active");
 
   const passwordResult = await verifyPasswordResult(
@@ -93,6 +107,66 @@ export const authenticateCredentials = async (
     globalRole: user.globalRole,
     userVersion: user.updatedAt.toISOString(),
   };
+};
+
+export const authenticateAdminCredentials = async (
+  input: { username: string; password: string },
+  findUser: AdminUserLookup = findAuthUserByAdminUsername,
+): Promise<AuthIdentity | null> => {
+  const user = await findUser(input.username);
+  if (!user?.isActive || user.globalRole !== GlobalUserRole.SUPER_ADMIN) {
+    return null;
+  }
+
+  const result = await verifyPasswordResult(user.passwordHash, input.password);
+  if (result !== "pass") {
+    return null;
+  }
+
+  return {
+    id: user.id,
+    name: user.name,
+    globalRole: user.globalRole,
+    userVersion: user.updatedAt.toISOString(),
+  };
+};
+
+export const authenticateAdminLogin = async (
+  input: AdminLoginInput,
+  context: LoginContext,
+  dependencies: {
+    limiter?: LoginRateLimiter;
+    findUser?: AdminUserLookup;
+  } = {},
+): Promise<AuthIdentity | null> => {
+  const validation = adminLoginSchema.safeParse(input);
+  const identifier = validation.success
+    ? validation.data.username
+    : String(input.username).trim().toLowerCase().slice(0, 32);
+  const key = createAdminLoginRateLimitKey({
+    identifier,
+    ipAddress: context.ipAddress,
+  });
+  const limiter = dependencies.limiter ?? getLoginRateLimiter();
+
+  if (!(await limiter.isAllowed(key))) {
+    return null;
+  }
+
+  if (!validation.success) {
+    await limiter.recordFailure(key);
+    return null;
+  }
+
+  const identity = await authenticateAdminCredentials(
+    validation.data,
+    dependencies.findUser,
+  );
+  if (!identity) {
+    await limiter.recordFailure(key);
+  }
+
+  return identity;
 };
 
 export const authenticateLogin = async (

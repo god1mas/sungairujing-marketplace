@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
+Post-baseline Admin Username Authentication Migration — **PRODUCTION AUTHENTICATION VERIFIED; GIT RECONCILIATION PENDING**. The additive Production migration and exact-ID username provisioning passed. Deployment `dpl_D1CpvYqv5RbQGUyJHqyXFpC4pp3K` is live at `https://umkmdesasungairujing.web.id` from the verified release source snapshot `304a77760177fd1bd569a71d516ef8a4a81b06f9`. Operator-controlled Super Admin and Merchant authentication checks passed. Preview-specific tests were skipped by operator decision. Password rotation and reconciliation of `origin/main` remain pending; no new Production deployment is authorized by this status update.
 
 ## Sub-Phase Status
 
@@ -40,7 +40,7 @@ Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
 - Phase 10 — Super Admin Content Management — **COMPLETED**
 - Phase 11 — Notifications, QR, Share & PWA — **COMPLETED**
 - Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
-- Phase 13 and later — **NOT STARTED**
+- Phase 13 status in this historical section predates the deployed application; this auth-migration task does not reverify or change Production.
 
 ## Completed
 
@@ -202,10 +202,11 @@ Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
 - Privacy-safe public analytics burst limiting with hashed IP keys, Upstash production storage, local development storage, and documented fail-open analytics behavior
 - Expanded cross-tenant Product/evidence, suspended-state, Super Admin boundary, MIME spoofing, upload-boundary, XSS escaping, CSRF/origin, and direct-route manipulation tests
 - Post-Phase-12 Server Action runtime hotfix separating UI initial-state objects from all module-level `"use server"` action exports
+- Admin Username Authentication Migration Phase 3 local verification on isolated PostgreSQL 17, including live migrations, exact-ID provisioning, database-backed login, and browser authorization checks
 
 ## In Progress
 
-- No phase is currently in progress. Phase 12 is complete; Phase 13 has not started.
+- Gate 4C.1 applied only `20261118000000_add_admin_username` to the verified Production project, and Gate 4C.2 provisioned `admin_sungairujing` on the operator-selected existing active Super Admin row without changing its ID, role, password hash, or relationships. Gate 4C.3 released commit `304a77760177fd1bd569a71d516ef8a4a81b06f9`; Preview-specific testing was skipped by operator decision. The reviewed source snapshot is live as deployment `dpl_D1CpvYqv5RbQGUyJHqyXFpC4pp3K`. Operator-reported Phase 4D admin/merchant login, logout, legacy-login rejection, and cross-role protection checks passed. Phase 4E read-only recovery audit passed; Phase 4F documentation is updated locally, while Git `main` reconciliation and password rotation remain pending.
 
 ## Known Issues
 
@@ -218,6 +219,9 @@ Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
 - Real Supabase projects, buckets, and credentials are not configured in this repository; external network integration was not tested in Sub-Phase 3A.
 - Phase 11 authenticated database-backed notification and suspended-merchant QR browser lifecycles remain externally limited because local PostgreSQL/session fixtures were unavailable; authorization and URL behavior are covered deterministically.
 - Phase 12 authenticated PostgreSQL/Supabase-backed cross-tenant browser lifecycles remain externally limited because local database, session fixtures, and provider credentials are unavailable; the security decisions are covered deterministically at service/repository level.
+- Anonymous/merchant requests to `/admin` correctly redirect, but Next.js may log `UnauthenticatedError`/`ForbiddenError` from the page's independently rendered `getOverview()` while the layout guard redirects. No admin data is returned; this is non-blocking log noise, not a verified data exposure.
+- Production log review on 2026-11-20 (10:17–10:47 UTC, available 30-minute window) found six `error` entries, all `UnauthenticatedError`/`ForbiddenError` on protected `/admin` or `/dashboard` requests; no P1001, P2024, Prisma, Upstash, NextAuth, or HTTP 500 evidence in that window. This does not prove long-term database stability. Authentication diagnostic logging was verbose: 35 of 40 `info` records were stage events; disabling the temporary Production diagnostic flag requires separate authorization.
+- The staged CLI deployment's automatic Git metadata reports the older `34d24d0` SHA; the uploaded source files were independently matched against release commit `304a777` before promotion. Do not use that Git metadata alone as source provenance.
 
 ## Tests
 
@@ -365,15 +369,20 @@ Phase 12 — Security Hardening & Test Expansion — **COMPLETED**
 - Post-Phase-12 registration hotfix: lint, typecheck, format check, build, and 312 Vitest tests across 90 files PASS
 - Post-Phase-12 registration Playwright smoke: PASS; `/register` loaded and server-side validation executed without the invalid Server Action export error
 - `npm audit --audit-level=high`: PASS after registration hotfix (0 vulnerabilities)
+- Admin username authentication migration: Prisma format, validate, and generate PASS; both migrations applied and `migrate status` PASS on isolated PostgreSQL 17. `admin_username` is nullable `VARCHAR(32)`, unique, SUPER_ADMIN-only, and the 16 application tables remain present.
+- Admin username authentication migration: lint, typecheck, format check, and production build PASS; 30 pages processed, including `/admin/login`.
+- Admin username authentication migration: disposable PostgreSQL integration test PASS for exact-ID provisioning, idempotence, preserved audit/membership relations, role-separated login, inactive accounts, rate limits, and session/role guards. Full Vitest suite PASS (105 files / 387 tests, 1 disposable-only test skipped without its explicit URL) with `--pool=forks --maxWorkers=1` on Windows.
+- Admin username authentication migration: focused local Playwright E2E PASS (4 tests) including authenticated admin and merchant browser login against the disposable database; prior anonymous smoke suite PASS (13 tests).
+- Admin username authentication migration: `npm audit` could not reach the npm registry endpoint in this environment; no dependency changes were made.
 
 ## Build Status
 
-PASS — Phase 12 remains completed; Merchant registration runtime hotfix verified
+Isolated release validation PASS at Gate 4B: lint, typecheck, format check, 392 unit tests, disposable PostgreSQL migration/integration, 34 E2E tests, and local build (30 pages). Gates 4C.1 and 4C.2 PASS. The reviewed release snapshot is live and public smoke checks passed; operator-controlled Production authentication checks passed. Preview-specific tests were skipped by operator decision. This status update did not run another local test/build or create another deployment.
 
 ## Last Commit
 
-`7d1355b test: harden marketplace security and tenant isolation`
+Release branch `304a777 feat: separate super admin username authentication`; remote `main` remains `2ed4885` (verified 2026-11-20). The original `main` worktree remains at `34d24d0` with pre-existing uncommitted changes.
 
 ## Next Action
 
-Await approval for the Merchant registration runtime hotfix Git checkpoint. Phase 13 remains not started.
+Review the Phase 4E–4F recovery and Git reconciliation plan in `docs/ADMIN-USERNAME-AUTH-MIGRATION.md`. Obtain separate approval and verify Vercel auto-deployment/domain-assignment safeguards before merging or pushing to `main`; preserve the original dirty worktree. Password rotation is pending and separately authorized. Do not rerun the completed Production migration or provisioning, restore the database, or redeploy automatically.

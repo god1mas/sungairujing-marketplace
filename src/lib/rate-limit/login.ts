@@ -21,6 +21,17 @@ export const createLoginRateLimitKey = ({
   return `auth:login:${digest}`;
 };
 
+export const createAdminLoginRateLimitKey = ({
+  identifier,
+  ipAddress,
+}: LoginAttempt): string => {
+  const digest = createHash("sha256")
+    .update(`${identifier}:${ipAddress}`)
+    .digest("hex");
+
+  return `auth:admin-login:${digest}`;
+};
+
 export const createInMemoryLoginRateLimiter = (
   now: () => number = Date.now,
 ): LoginRateLimiter => {

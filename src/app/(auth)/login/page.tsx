@@ -6,7 +6,7 @@ import { LoginForm } from "@/features/auth/components/login-form";
 
 export const metadata: Metadata = {
   title: "Login",
-  description: `Login merchant dan Super Admin ${BRAND_NAME}.`,
+  description: `Login merchant ${BRAND_NAME}.`,
 };
 
 export default async function LoginPage({
@@ -27,7 +27,7 @@ export default async function LoginPage({
           id="login-title"
           className="mt-5 text-3xl font-bold tracking-tight text-neutral-900"
         >
-          Login
+          Login Merchant
         </h1>
         <p className="mt-3 text-neutral-600">
           Gunakan nomor WhatsApp dan password akun Anda.

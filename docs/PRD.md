@@ -251,6 +251,10 @@ Sistem dirancang untuk mendukung pemulihan password otomatis melalui WhatsApp.
 
 **Catatan:** implementasi pemulihan password melalui WhatsApp bergantung pada provider/API yang dipilih pada Technical Specification.
 
+### Approved admin authentication separation
+
+Super Admin masuk melalui `/admin/login` menggunakan username dan password, bukan nomor WhatsApp atau Google OAuth. Username awal yang disetujui adalah `admin_sungairujing`. `/login` dan tautan login publik hanya untuk merchant. Akun Super Admin tetap dibuat/provisioned secara administratif, tanpa registrasi publik; perubahan ini tidak mengubah `User.id` atau riwayat audit.
+
 ---
 
 ## 9. Merchant Registration

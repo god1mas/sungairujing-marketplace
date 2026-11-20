@@ -544,12 +544,14 @@ Credentials Provider
 JWT Session
 ```
 
-Credential:
+Credential merchant:
 
 ```text
 whatsapp_number
 password
 ```
+
+Keputusan autentikasi admin terbaru: provider Credentials kedua (`admin-credentials`) memakai `admin_username` + password Argon2id. Provider merchant `credentials` menolak `SUPER_ADMIN`; provider admin menolak `USER`. Keduanya menggunakan JWT 8 jam, validasi role dari database, dan rate-limit server-side dengan namespace key terpisah. `/admin/login` berada di luar layout admin yang terlindungi; semua route/action admin tetap memeriksa `SUPER_ADMIN` pada server. Tidak ada Google OAuth atau registrasi admin publik.
 
 Auth.js dipakai untuk:
 

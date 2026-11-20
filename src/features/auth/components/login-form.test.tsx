@@ -11,8 +11,12 @@ const authMocks = vi.hoisted(() => ({
   signIn: vi.fn(),
   getSession: vi.fn(),
 }));
+const routerMocks = vi.hoisted(() => ({ replace: vi.fn() }));
 
 vi.mock("next-auth/react", () => authMocks);
+vi.mock("next/navigation", () => ({
+  useRouter: () => routerMocks,
+}));
 
 import { LoginForm } from "./login-form";
 
@@ -54,5 +58,31 @@ describe("LoginForm", () => {
       ),
     );
     expect(authMocks.getSession).not.toHaveBeenCalled();
+  });
+
+  it("sends a merchant to the dashboard but never accepts an admin session", async () => {
+    authMocks.signIn.mockResolvedValue({ ok: true });
+    authMocks.getSession.mockResolvedValueOnce({
+      user: { globalRole: "SUPER_ADMIN" },
+    });
+    render(<LoginForm />);
+    fireEvent.change(screen.getByLabelText("Nomor WhatsApp"), {
+      target: { value: "081234567890" },
+    });
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "password" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Login" }));
+    await waitFor(() =>
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Sesi tidak dapat dibuat.",
+      ),
+    );
+    expect(routerMocks.replace).not.toHaveBeenCalled();
+    expect(authMocks.signIn).toHaveBeenCalledWith("credentials", {
+      whatsappNumber: "081234567890",
+      password: "password",
+      redirect: false,
+    });
   });
 });

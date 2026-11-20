@@ -27,7 +27,7 @@ export const guardAdminArea = async () => {
     return await requireSuperAdmin();
   } catch (error) {
     if (error instanceof UnauthenticatedError) {
-      redirect("/login");
+      redirect("/admin/login");
     }
     if (error instanceof ForbiddenError) {
       redirect("/dashboard");

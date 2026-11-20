@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 
-export const LogoutButton = () => {
+export const LogoutButton = ({
+  callbackUrl = "/",
+}: {
+  callbackUrl?: string;
+}) => {
   const [isPending, setIsPending] = useState(false);
 
   return (
@@ -12,7 +16,7 @@ export const LogoutButton = () => {
       disabled={isPending}
       onClick={() => {
         setIsPending(true);
-        void signOut({ callbackUrl: "/" });
+        void signOut({ callbackUrl });
       }}
       className="min-h-11 rounded-md border border-neutral-300 bg-white px-4 py-2 font-medium text-neutral-800 hover:bg-neutral-100 disabled:opacity-60"
     >

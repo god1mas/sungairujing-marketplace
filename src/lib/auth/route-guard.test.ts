@@ -30,7 +30,7 @@ describe("protected route guards", () => {
     mocks.requireSuperAdmin.mockRejectedValue(new UnauthenticatedError());
 
     await expect(guardMerchantDashboard()).rejects.toThrow("redirect:/login");
-    await expect(guardAdminArea()).rejects.toThrow("redirect:/login");
+    await expect(guardAdminArea()).rejects.toThrow("redirect:/admin/login");
   });
 
   it("denies a normal merchant from the Super Admin area", async () => {

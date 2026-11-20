@@ -168,6 +168,8 @@ Semua fitur Super Admin membutuhkan authentication.
 
 Tidak boleh tersedia endpoint/page public yang memungkinkan pengguna mendaftarkan dirinya sebagai Super Admin.
 
+Keputusan autentikasi terbaru: login Super Admin memakai username + password hanya melalui `/admin/login`. Login merchant pada `/login` tetap memakai WhatsApp + password. Kedua jalur wajib menolak akun dengan role yang tidak sesuai; `/admin/login` bukan registrasi dan keberadaan/ketiadaan tautan publik bukan kontrol akses.
+
 ---
 
 # 5. Authentication Rules

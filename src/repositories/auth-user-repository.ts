@@ -27,3 +27,19 @@ export const findAuthUserByWhatsapp = async (
     },
   });
 };
+
+export const findAuthUserByAdminUsername = async (
+  adminUsername: string,
+): Promise<AuthUserRecord | null> =>
+  prisma.user.findUnique({
+    where: { adminUsername },
+    select: {
+      id: true,
+      name: true,
+      whatsappNumber: true,
+      passwordHash: true,
+      globalRole: true,
+      isActive: true,
+      updatedAt: true,
+    },
+  });

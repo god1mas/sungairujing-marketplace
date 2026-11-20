@@ -6,7 +6,7 @@ test("anonymous visitors cannot access merchant verification", async ({
   await page.goto("/dashboard/verification");
   await expect(page).toHaveURL(/\/login/);
   await expect(
-    page.getByRole("heading", { level: 1, name: "Login" }),
+    page.getByRole("heading", { level: 1, name: "Login Merchant" }),
   ).toBeVisible();
 });
 
@@ -14,8 +14,8 @@ test("anonymous visitors cannot access the admin verification queue", async ({
   page,
 }) => {
   await page.goto("/admin/verifications");
-  await expect(page).toHaveURL(/\/login/);
+  await expect(page).toHaveURL(/\/admin\/login$/);
   await expect(
-    page.getByRole("heading", { level: 1, name: "Login" }),
+    page.getByRole("heading", { level: 1, name: "Login Super Admin" }),
   ).toBeVisible();
 });

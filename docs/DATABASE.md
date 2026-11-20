@@ -401,6 +401,7 @@ users
 | id | UUID | PK | User identifier |
 | name | VARCHAR | NOT NULL | Nama lengkap pengguna/pemilik akun merchant |
 | whatsapp_number | VARCHAR | NOT NULL, UNIQUE | Login identifier |
+| admin_username | VARCHAR(32) | NULL, UNIQUE | Username login khusus `SUPER_ADMIN`; `NULL` untuk merchant |
 | password_hash | TEXT | NOT NULL | Secure password hash |
 | global_role | ENUM | NOT NULL | USER / SUPER_ADMIN |
 | terms_accepted_at | TIMESTAMPTZ | NULL | Waktu menyetujui terms |
@@ -414,7 +415,10 @@ users
 
 ```text
 UNIQUE(whatsapp_number)
+UNIQUE(admin_username) untuk nilai non-NULL
 ```
+
+Migrasi `admin_username` bersifat aditif dan nullable agar baris lama tetap valid. Nilai non-NULL harus lowercase, 4–32 karakter, dimulai huruf, dan hanya berisi `a-z`, `0-9`, `_`; database menolak nilai non-NULL pada role selain `SUPER_ADMIN`. Akun Super Admin yang sudah ada diprovision berdasarkan `User.id` yang diverifikasi, tanpa mengganti `id`, hash password, atau relasi audit.
 
 Nomor harus dinormalisasi sebelum disimpan.
 

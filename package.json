@@ -24,7 +24,8 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
-    "db:bootstrap-super-admin": "tsx prisma/bootstrap-super-admin.ts"
+    "db:bootstrap-super-admin": "tsx prisma/bootstrap-super-admin.ts",
+    "db:provision-admin-username": "tsx prisma/provision-admin-username.ts"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.2.1",

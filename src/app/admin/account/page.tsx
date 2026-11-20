@@ -28,7 +28,7 @@ export default function AdminAccountPage() {
           </div>
         </div>
         <div className="mt-6 border-t border-neutral-200 pt-1">
-          <ChangePasswordForm />
+          <ChangePasswordForm callbackUrl="/admin/login" />
         </div>
       </section>
     </div>

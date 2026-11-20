@@ -1,8 +1,16 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { authenticateLogin } from "@/services/auth-service";
+import {
+  authenticateAdminLogin,
+  authenticateLogin,
+} from "@/services/auth-service";
 
 const SESSION_MAX_AGE_SECONDS = 8 * 60 * 60;
+
+const clientIpAddress = (forwardedFor: string | string[] | undefined) =>
+  (Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor)
+    ?.split(",")[0]
+    ?.trim() || "unknown";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.AUTH_SECRET,
@@ -35,18 +43,33 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, request) {
-        const forwardedFor = request.headers?.["x-forwarded-for"];
-        const ipAddress =
-          (Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor)
-            ?.split(",")[0]
-            ?.trim() || "unknown";
-
         return authenticateLogin(
           {
             whatsappNumber: credentials?.whatsappNumber ?? "",
             password: credentials?.password ?? "",
           },
-          { ipAddress },
+          {
+            ipAddress: clientIpAddress(request.headers?.["x-forwarded-for"]),
+          },
+        );
+      },
+    }),
+    CredentialsProvider({
+      id: "admin-credentials",
+      name: "Username dan Password Admin",
+      credentials: {
+        username: { label: "Username", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials, request) {
+        return authenticateAdminLogin(
+          {
+            username: credentials?.username ?? "",
+            password: credentials?.password ?? "",
+          },
+          {
+            ipAddress: clientIpAddress(request.headers?.["x-forwarded-for"]),
+          },
         );
       },
     }),

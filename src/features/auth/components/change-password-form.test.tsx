@@ -16,4 +16,13 @@ describe("PasswordChangeSessionInvalidator", () => {
       }),
     );
   });
+
+  it("returns an admin to the dedicated login after password rotation", async () => {
+    render(
+      <PasswordChangeSessionInvalidator success callbackUrl="/admin/login" />,
+    );
+    await waitFor(() =>
+      expect(signOut).toHaveBeenCalledWith({ callbackUrl: "/admin/login" }),
+    );
+  });
 });
